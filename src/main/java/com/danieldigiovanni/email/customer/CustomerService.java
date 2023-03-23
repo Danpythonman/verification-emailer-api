@@ -13,4 +13,12 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
+    public Customer saveCustomer(Customer customer) {
+        return this.customerRepository.save(customer);
+    }
+
+    public Customer getCustomerById(Long id) {
+        return this.customerRepository.findById(id).get();
+    }
+
 }
