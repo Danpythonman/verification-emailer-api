@@ -1,6 +1,7 @@
 package com.danieldigiovanni.email.customer;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -36,9 +37,7 @@ public class CustomerController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
-    public Map<String, String> handleValidationException(
-        ConstraintViolationException exception
-    ) {
+    public Map<String, String> handleValidationException(ConstraintViolationException exception) {
         return exception.getConstraintViolations()
             .stream()
             .collect(Collectors.toMap(
@@ -50,9 +49,13 @@ public class CustomerController {
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(EntityExistsException.class)
-    public String handleAlreadyExistsException(
-        EntityExistsException exception
-    ) {
+    public String handleAlreadyExistsException(EntityExistsException exception) {
+        return exception.getMessage();
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public String handleNotFoundException(EntityNotFoundException exception) {
         return exception.getMessage();
     }
 
