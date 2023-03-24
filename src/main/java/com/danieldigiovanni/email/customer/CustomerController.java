@@ -2,9 +2,11 @@ package com.danieldigiovanni.email.customer;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +28,7 @@ public class CustomerController {
     }
 
     @PostMapping("/customer")
-    public Customer saveCustomer(@RequestBody Customer customer) {
+    public Customer saveCustomer(@RequestBody @Valid Customer customer) {
         return this.customerService.saveCustomer(customer);
     }
 
@@ -36,15 +38,22 @@ public class CustomerController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ConstraintViolationException.class)
-    public Map<String, String> handleValidationException(ConstraintViolationException exception) {
-        return exception.getConstraintViolations()
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationException(MethodArgumentNotValidException exception) {
+        return exception.getFieldErrors()
             .stream()
             .collect(Collectors.toMap(
-                constraintViolation -> constraintViolation.getPropertyPath()
-                    .toString(),
-                ConstraintViolation::getMessage
+                FieldError::getField,
+                fieldError -> fieldError.getDefaultMessage() == null
+                    ? "Unknown error"
+                    : fieldError.getDefaultMessage()
             ));
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ValidationException.class)
+    public String handleValidationException(ValidationException exception) {
+        return exception.getMessage();
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
