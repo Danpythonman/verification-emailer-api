@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
@@ -25,10 +24,25 @@ public class Customer {
     private String password;
     private Boolean isVerified;
     private Date createdAt;
-    @Transient
-    private String confirmPassword;
 
     public Customer() { }
+
+    public Customer(@NotNull String name, @NotNull String email, @NotNull String password, Boolean isVerified, Date createdAt) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.isVerified = isVerified;
+        this.createdAt = createdAt;
+    }
+
+    public Customer(Long id, @NotNull String name, @NotNull String email, @NotNull String password, Boolean isVerified, Date createdAt) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.isVerified = isVerified;
+        this.createdAt = createdAt;
+    }
 
     public Long getId() {
         return id;
@@ -76,14 +90,6 @@ public class Customer {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
     }
 
 }
