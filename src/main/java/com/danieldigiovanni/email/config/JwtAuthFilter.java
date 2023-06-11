@@ -4,6 +4,10 @@ import com.danieldigiovanni.email.auth.CustomerDetails;
 import com.danieldigiovanni.email.auth.CustomerDetailsService;
 import com.danieldigiovanni.email.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,7 +24,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Date;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -43,15 +46,28 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
+        Claims claims;
         final String jwt = authHeader.substring(7);
-
-        Claims claims = JwtUtils.extractClaimsFromToken(
-            jwt, this.TOKEN_SECRET_KEY
-        );
-
-        Date expiration = claims.getExpiration();
-        if (new Date().after(expiration)) {
-            filterChain.doFilter(request, response);
+        try {
+            claims = JwtUtils.extractClaimsFromToken(
+                jwt,
+                this.TOKEN_SECRET_KEY
+            );
+        } catch (
+            IllegalArgumentException
+            | MalformedJwtException
+            | UnsupportedJwtException exception
+        ) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.addHeader("WWW-Authenticate", "Bearer error=\"invalid_token\", error_description=\"Access token is invalid\"");
+            return;
+        } catch (ExpiredJwtException exception) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.addHeader("WWW-Authenticate", "Bearer error=\"invalid_token\", error_description=\"Access token is expired\"");
+            return;
+        } catch (SignatureException exception) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.addHeader("WWW-Authenticate", "Bearer error=\"invalid_token\", error_description=\"Access token signature is invalid\"");
             return;
         }
 

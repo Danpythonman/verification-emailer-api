@@ -2,11 +2,15 @@ package com.danieldigiovanni.email.utils;
 
 import com.danieldigiovanni.email.customer.Customer;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 
 import java.security.Key;
 import java.util.Date;
@@ -23,12 +27,11 @@ public class JwtUtils {
             .setExpiration(new Date(expiredAtMillis))
             .signWith(
                 JwtUtils.getSigningKey(tokenSecretKey),
-                SignatureAlgorithm.HS256
-            )
+                SignatureAlgorithm.HS256)
             .compact();
     }
 
-    public static Claims extractClaimsFromToken(String jwt, String tokenSecretKey) {
+    public static Claims extractClaimsFromToken(String jwt, String tokenSecretKey) throws IllegalArgumentException, MalformedJwtException, UnsupportedJwtException, ExpiredJwtException, SignatureException {
         JwtParser jwtParser = Jwts.parserBuilder()
             .setSigningKey(JwtUtils.getSigningKey(tokenSecretKey))
             .build();
