@@ -2,6 +2,7 @@ package com.danieldigiovanni.email.config;
 
 import com.danieldigiovanni.email.auth.CustomerDetails;
 import com.danieldigiovanni.email.auth.CustomerDetailsService;
+import com.danieldigiovanni.email.constants.AuthConstants;
 import com.danieldigiovanni.email.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -39,6 +41,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     public void doFilterInternal(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain) throws ServletException, IOException {
+        if (
+            List.of(AuthConstants.WHITELISTED_ROUTES)
+                .contains(request.getServletPath())
+        ) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
