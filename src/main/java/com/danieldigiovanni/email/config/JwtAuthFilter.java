@@ -27,6 +27,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Filter to authorize requests based on the JWT provided in the Authorization
+ * header.
+ */
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
@@ -39,6 +43,36 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         this.TOKEN_SECRET_KEY = tokenSecretKey;
     }
 
+    /**
+     * Filters requests based on the provided JWT in the Authorization header.
+     * <p>
+     * The following checks must pass for a request to pass this filter:
+     * <ul>
+     *     <li>Authorization header must be present.</li>
+     *     <li>Authorization header must be using Bearer authentication.</li>
+     *     <li>Authorization token must be a valid JWT.</li>
+     *     <li>JWT must not be expired.</li>
+     *     <li>JWT pass signature validation.</li>
+     *     <li>JWT subject must be a valid id of an existing customer.</li>
+     * </ul>
+     * If any of the above checks fail, the filter chain is stopped and a
+     * response is returned with an HTTP error status code and a
+     * WWW-Authenticate header.
+     * <p>
+     * Register and login routes are whitelisted, and no authorization is
+     * required to access them.
+     *
+     * @param request     HTTP request. Must include the Authorization header.
+     * @param response    HTTP response. Will be populated and sent back in the
+     *                    event of any of the above validation failures.
+     * @param filterChain The filter chain. Will be continued if authorization
+     *                    succeeds.
+     *
+     * @throws ServletException If an I/O error occurs during the processing of
+     *                          the filter chain.
+     * @throws IOException      If the processing of the filter chain fails for
+     *                          any other reason.
+     */
     @Override
     public void doFilterInternal(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain) throws ServletException, IOException {
         if (
@@ -124,6 +158,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * Sets the status code of the response to 400 (bad request) and sets the
+     * WWW-Authenticate header's <code>error</code> field to "invalid_request"
+     * and <code>error_description</code> field to the given error description.
+     *
+     * @param response         The response to be given the status code and
+     *                         WWW-Authenticate header.
+     * @param errorDescription The error description to be used for the
+     *                         <code>error_description</code> field of the
+     *                         WWW-Authenticate header.
+     */
     private void sendErrorInvalidRequest(HttpServletResponse response, String errorDescription) {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         response.addHeader(
@@ -133,6 +178,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         );
     }
 
+    /**
+     * Sets the status code of the response to 401 (unauthorized) and sets the
+     * WWW-Authenticate header's <code>error</code> field to "invalid_token"
+     * and <code>error_description</code> field to the given error description.
+     *
+     * @param response         The response to be given the status code and
+     *                         WWW-Authenticate header.
+     * @param errorDescription The error description to be used for the
+     *                         <code>error_description</code> field of the
+     *                         WWW-Authenticate header.
+     */
     private void sendErrorInvalidToken(HttpServletResponse response, String errorDescription) {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.addHeader(

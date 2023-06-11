@@ -5,6 +5,9 @@ import jakarta.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utils for authentication and authorization.
+ */
 public final class AuthUtils {
 
     private AuthUtils() { }
@@ -21,7 +24,8 @@ public final class AuthUtils {
      * </ul>
      *
      * @param password The password to be validated.
-     * @throws ValidationException Thrown if password is not valid.
+     *
+     * @throws ValidationException If password is not valid.
      */
     public static void checkPasswordValidity(String password) throws ValidationException {
         final int MINIMUM_PASSWORD_LENGTH = 6;

@@ -2,6 +2,9 @@ package com.danieldigiovanni.email.auth;
 
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * Format of the request body for login requests.
+ */
 public class LoginRequest {
 
     @NotNull

@@ -1,5 +1,8 @@
 package com.danieldigiovanni.email.auth;
 
+/**
+ * Format of the response body for response to login and register requests.
+ */
 public class AuthResponse {
 
     private String token;

@@ -3,8 +3,9 @@ package com.danieldigiovanni.email.auth;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.Date;
-
+/**
+ * Format of the request body for register requests.
+ */
 public class RegisterRequest {
 
     @NotNull
