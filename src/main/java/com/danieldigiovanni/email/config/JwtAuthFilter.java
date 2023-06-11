@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,7 +38,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     public void doFilterInternal(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.addHeader("WWW-Authenticate", "Bearer error=\"invalid_request\", error_description=\"Access token was not provided\"");
             return;
         }
 
@@ -55,7 +57,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String subject = claims.getSubject();
         if (subject == null) {
-            filterChain.doFilter(request, response);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.addHeader("WWW-Authenticate", "Bearer error=\"invalid_token\", error_description=\"Access token is missing subject\"");
             return;
         }
 
@@ -63,8 +66,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             customerDetails
                 = this.customerDetailsService.loadUserByUsername(subject);
-        } catch (NumberFormatException | UsernameNotFoundException exception) {
-            filterChain.doFilter(request, response);
+        } catch (NumberFormatException exception) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.addHeader("WWW-Authenticate", "Bearer error=\"invalid_token\", error_description=\"Access token subject is invalid\"");
+            return;
+        } catch (UsernameNotFoundException exception) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.addHeader("WWW-Authenticate", "Bearer error=\"invalid_token\", error_description=\"Access token subject does not exist\"");
             return;
         }
 
