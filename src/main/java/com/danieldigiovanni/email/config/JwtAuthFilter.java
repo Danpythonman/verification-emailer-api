@@ -51,8 +51,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.addHeader("WWW-Authenticate", "Bearer error=\"invalid_request\", error_description=\"Access token was not provided\"");
+            this.sendErrorInvalidRequest(
+                response,
+                "Access token was not provided"
+            );
             return;
         }
 
@@ -68,23 +70,25 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             | MalformedJwtException
             | UnsupportedJwtException exception
         ) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.addHeader("WWW-Authenticate", "Bearer error=\"invalid_token\", error_description=\"Access token is invalid\"");
+            this.sendErrorInvalidToken(response, "Access token is invalid");
             return;
         } catch (ExpiredJwtException exception) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.addHeader("WWW-Authenticate", "Bearer error=\"invalid_token\", error_description=\"Access token is expired\"");
+            this.sendErrorInvalidToken(response, "Access token is expired");
             return;
         } catch (SignatureException exception) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.addHeader("WWW-Authenticate", "Bearer error=\"invalid_token\", error_description=\"Access token signature is invalid\"");
+            this.sendErrorInvalidToken(
+                response,
+                "Access token signature is invalid"
+            );
             return;
         }
 
         String subject = claims.getSubject();
         if (subject == null) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.addHeader("WWW-Authenticate", "Bearer error=\"invalid_token\", error_description=\"Access token is missing subject\"");
+            this.sendErrorInvalidToken(
+                response,
+                "Access token is missing subject"
+            );
             return;
         }
 
@@ -93,12 +97,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             customerDetails
                 = this.customerDetailsService.loadUserByUsername(subject);
         } catch (NumberFormatException exception) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.addHeader("WWW-Authenticate", "Bearer error=\"invalid_token\", error_description=\"Access token subject is invalid\"");
+            this.sendErrorInvalidToken(
+                response,
+                "Access token subject is invalid"
+            );
             return;
         } catch (UsernameNotFoundException exception) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.addHeader("WWW-Authenticate", "Bearer error=\"invalid_token\", error_description=\"Access token subject does not exist\"");
+            this.sendErrorInvalidToken(
+                response,
+                "Access token subject does not exist"
+            );
             return;
         }
 
@@ -114,6 +122,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
+    }
+
+    private void sendErrorInvalidRequest(HttpServletResponse response, String errorDescription) {
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        response.addHeader(
+            "WWW-Authenticate",
+            "Bearer error=\"invalid_request\", " +
+                "error_description=\"" + errorDescription + "\""
+        );
+    }
+
+    private void sendErrorInvalidToken(HttpServletResponse response, String errorDescription) {
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.addHeader(
+            "WWW-Authenticate",
+            "Bearer error=\"invalid_token\", " +
+                "error_description=\"" + errorDescription + "\""
+        );
     }
 
 }
