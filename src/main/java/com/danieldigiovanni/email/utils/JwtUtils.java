@@ -15,7 +15,9 @@ import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 import java.util.Date;
 
-public class JwtUtils {
+public final class JwtUtils {
+
+    private JwtUtils() { }
 
     public static String generateToken(Customer customer, Long tokenDurationMillis, String tokenSecretKey) {
         long issuedAtMillis = System.currentTimeMillis();
@@ -27,7 +29,8 @@ public class JwtUtils {
             .setExpiration(new Date(expiredAtMillis))
             .signWith(
                 JwtUtils.getSigningKey(tokenSecretKey),
-                SignatureAlgorithm.HS256)
+                SignatureAlgorithm.HS256
+            )
             .compact();
     }
 

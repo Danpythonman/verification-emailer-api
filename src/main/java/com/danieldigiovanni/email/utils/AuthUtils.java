@@ -5,7 +5,9 @@ import jakarta.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AuthUtils {
+public final class AuthUtils {
+
+    private AuthUtils() { }
 
     /**
      * Throws exception if password constraints are not satisfied.
