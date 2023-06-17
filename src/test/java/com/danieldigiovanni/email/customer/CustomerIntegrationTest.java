@@ -4,7 +4,6 @@ import com.danieldigiovanni.email.AddServletPathRequestPostProcessor;
 import com.danieldigiovanni.email.TestUtils;
 import com.danieldigiovanni.email.auth.AuthResponse;
 import com.danieldigiovanni.email.auth.RegisterRequest;
-import com.danieldigiovanni.email.utils.JwtUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,7 +29,8 @@ public class CustomerIntegrationTest {
 
     @Test
     public void testRegisterAndGetCustomer_HappyPath() throws Exception {
-        RegisterRequest registerRequest = new RegisterRequest(
+        String path = "/register";
+        RegisterRequest body = new RegisterRequest(
             "Customer 6",
             "customer6@email.com",
             "Password123",
@@ -38,10 +38,10 @@ public class CustomerIntegrationTest {
         );
 
         MvcResult result = this.mockMvc.perform(
-                post("/register")
-                    .with(new AddServletPathRequestPostProcessor("/register"))
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(body))
             )
             .andExpect(status().isOk())
             .andReturn();
@@ -53,9 +53,13 @@ public class CustomerIntegrationTest {
         String id = TestUtils.extractClaimsFromToken(authResponse.getToken())
             .getSubject();
 
+        path = "/customer/" + id;
+
         this.mockMvc.perform(
-                get("/customer/" + id)
-                    .header("Authorization", "Bearer " + authResponse.getToken())
+                get(path)
+                    .header(
+                        "Authorization", "Bearer " + authResponse.getToken()
+                    )
             )
             .andExpect(status().isOk());
     }

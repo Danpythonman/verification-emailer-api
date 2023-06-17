@@ -2,8 +2,6 @@ package com.danieldigiovanni.email.auth;
 
 import com.danieldigiovanni.email.AddServletPathRequestPostProcessor;
 import com.danieldigiovanni.email.TestUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,7 +25,8 @@ public class AuthIntegrationTest {
 
     @Test
     public void testRegisterCustomer_HappyPath() throws Exception {
-        RegisterRequest registerRequest = new RegisterRequest(
+        String path = "/register";
+        RegisterRequest body = new RegisterRequest(
             "Customer 1",
             "customer1@email.com",
             "Password123",
@@ -35,17 +34,18 @@ public class AuthIntegrationTest {
         );
 
         this.mockMvc.perform(
-                post("/register")
-                    .with(new AddServletPathRequestPostProcessor("/register"))
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(body))
             )
             .andExpect(status().isOk());
     }
 
     @Test
     public void testRegister_AlreadyExists() throws Exception {
-        RegisterRequest registerRequest = new RegisterRequest(
+        String path = "/register";
+        RegisterRequest body = new RegisterRequest(
             "Customer 2",
             "customer2@email.com",
             "Password123",
@@ -53,25 +53,26 @@ public class AuthIntegrationTest {
         );
 
         this.mockMvc.perform(
-                post("/register")
-                    .with(new AddServletPathRequestPostProcessor("/register"))
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(body))
             )
             .andExpect(status().isOk());
 
         this.mockMvc.perform(
-                post("/register")
-                    .with(new AddServletPathRequestPostProcessor("/register"))
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(body))
             )
             .andExpect(status().isConflict());
     }
 
     @Test
     public void testRegister_InvalidEmail() throws Exception {
-        RegisterRequest registerRequest = new RegisterRequest(
+        String path = "/register";
+        RegisterRequest body = new RegisterRequest(
             "Customer 3",
             "customer3.com",
             "Password123",
@@ -79,17 +80,18 @@ public class AuthIntegrationTest {
         );
 
         this.mockMvc.perform(
-                post("/register")
-                    .with(new AddServletPathRequestPostProcessor("/register"))
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(body))
             )
             .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testRegister_InvalidPassword() throws Exception {
-        RegisterRequest registerRequest = new RegisterRequest(
+        String path = "/register";
+        RegisterRequest body = new RegisterRequest(
             "Customer 4",
             "customer4@email.com",
             "pw",
@@ -97,72 +99,73 @@ public class AuthIntegrationTest {
         );
 
         this.mockMvc.perform(
-                post("/register")
-                    .with(new AddServletPathRequestPostProcessor("/register"))
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(body))
             )
             .andExpect(status().isBadRequest());
 
-        registerRequest.setPassword("password");
-        registerRequest.setConfirmPassword("password");
+        body.setPassword("password");
+        body.setConfirmPassword("password");
 
         this.mockMvc.perform(
-                post("/register")
-                    .with(new AddServletPathRequestPostProcessor("/register"))
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(body))
             )
             .andExpect(status().isBadRequest());
 
-        registerRequest.setPassword("PASSWORD");
-        registerRequest.setConfirmPassword("PASSWORD");
+        body.setPassword("PASSWORD");
+        body.setConfirmPassword("PASSWORD");
 
         this.mockMvc.perform(
-                post("/register")
-                    .with(new AddServletPathRequestPostProcessor("/register"))
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(body))
             )
             .andExpect(status().isBadRequest());
 
-        registerRequest.setPassword("password123");
-        registerRequest.setConfirmPassword("password123");
+        body.setPassword("password123");
+        body.setConfirmPassword("password123");
 
         this.mockMvc.perform(
-                post("/register")
-                    .with(new AddServletPathRequestPostProcessor("/register"))
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(body))
             )
             .andExpect(status().isBadRequest());
 
-        registerRequest.setPassword("PASSWORD123");
-        registerRequest.setConfirmPassword("PASSWORD123");
+        body.setPassword("PASSWORD123");
+        body.setConfirmPassword("PASSWORD123");
 
         this.mockMvc.perform(
-                post("/register")
-                    .with(new AddServletPathRequestPostProcessor("/register"))
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(body))
             )
             .andExpect(status().isBadRequest());
 
-        registerRequest.setPassword("123456789");
-        registerRequest.setConfirmPassword("123456789");
+        body.setPassword("123456789");
+        body.setConfirmPassword("123456789");
 
         this.mockMvc.perform(
-                post("/register")
-                    .with(new AddServletPathRequestPostProcessor("/register"))
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(body))
             )
             .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testRegister_PasswordsDoNotMatch() throws Exception {
-        RegisterRequest registerRequest = new RegisterRequest(
+        String path = "/register";
+        RegisterRequest body = new RegisterRequest(
             "Customer 5",
             "customer5@email.com",
             "Password123",
@@ -170,10 +173,10 @@ public class AuthIntegrationTest {
         );
 
         this.mockMvc.perform(
-                post("/register")
-                    .with(new AddServletPathRequestPostProcessor("/register"))
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(body))
             )
             .andExpect(status().isBadRequest());
     }
