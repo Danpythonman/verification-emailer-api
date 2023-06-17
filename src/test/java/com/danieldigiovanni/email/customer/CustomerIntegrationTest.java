@@ -1,7 +1,12 @@
 package com.danieldigiovanni.email.customer;
 
+import com.danieldigiovanni.email.ContextPathRequestPostProcessor;
+import com.danieldigiovanni.email.auth.RegisterRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -9,6 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -26,154 +33,160 @@ public class CustomerIntegrationTest {
     }
 
     @Test
-    public void testCreateCustomer_HappyPath() throws Exception {
-        Customer customer = new Customer();
-        customer.setName("Customer 1");
-        customer.setEmail("customer1@email.com");
-        customer.setPassword("Password123");
-        customer.setConfirmPassword("Password123");
+    public void testRegisterCustomer_HappyPath() throws Exception {
+        RegisterRequest registerRequest = new RegisterRequest(
+            "Customer 1",
+            "customer1@email.com",
+            "Password123",
+            "Password123"
+        );
 
         this.mockMvc.perform(
-                post("/customer")
+                post("/register")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateCreateCustomerRequestBody(customer))
+                    .content(this.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isOk());
     }
 
     @Test
-    public void testCreateCustomer_AlreadyExists() throws Exception {
-        Customer customer = new Customer();
-        customer.setName("Customer 2");
-        customer.setEmail("customer2@email.com");
-        customer.setPassword("Password123");
-        customer.setConfirmPassword("Password123");
+    public void testRegister_AlreadyExists() throws Exception {
+        RegisterRequest registerRequest = new RegisterRequest(
+            "Customer 2",
+            "customer2@email.com",
+            "Password123",
+            "Password123"
+        );
 
         this.mockMvc.perform(
                 post("/customer")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateCreateCustomerRequestBody(customer))
+                    .content(this.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isOk());
 
         this.mockMvc.perform(
                 post("/customer")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateCreateCustomerRequestBody(customer))
+                    .content(this.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isConflict());
     }
 
     @Test
-    public void testCreateCustomer_InvalidEmail() throws Exception {
-        Customer customer = new Customer();
-        customer.setName("Customer 3");
-        customer.setEmail("invalid-email.com");
-        customer.setPassword("Password123");
-        customer.setConfirmPassword("Password123");
+    public void testRegister_InvalidEmail() throws Exception {
+        RegisterRequest registerRequest = new RegisterRequest(
+            "Customer 3",
+            "customer3@email.com",
+            "Password123",
+            "Password123"
+        );
 
         this.mockMvc.perform(
                 post("/customer")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateCreateCustomerRequestBody(customer))
+                    .content(this.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void testCreateCustomer_InvalidPassword() throws Exception {
-        Customer customer = new Customer();
-        customer.setName("Customer 4");
-        customer.setEmail("customer4@email.com");
-        customer.setPassword("pw");
-        customer.setConfirmPassword("pw");
+    public void testRegister_InvalidPassword() throws Exception {
+        RegisterRequest registerRequest = new RegisterRequest(
+            "Customer 4",
+            "customer4@email.com",
+            "pw",
+            "pw"
+        );
 
         this.mockMvc.perform(
                 post("/customer")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateCreateCustomerRequestBody(customer))
+                    .content(this.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isBadRequest());
 
-        customer.setPassword("password");
-        customer.setConfirmPassword("password");
+        registerRequest.setPassword("password");
+        registerRequest.setConfirmPassword("password");
 
         this.mockMvc.perform(
                 post("/customer")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateCreateCustomerRequestBody(customer))
+                    .content(this.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isBadRequest());
 
-        customer.setPassword("PASSWORD");
-        customer.setConfirmPassword("PASSWORD");
+        registerRequest.setPassword("PASSWORD");
+        registerRequest.setConfirmPassword("PASSWORD");
 
         this.mockMvc.perform(
                 post("/customer")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateCreateCustomerRequestBody(customer))
+                    .content(this.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isBadRequest());
 
-        customer.setPassword("password123");
-        customer.setConfirmPassword("password123");
+        registerRequest.setPassword("password123");
+        registerRequest.setConfirmPassword("password123");
 
         this.mockMvc.perform(
                 post("/customer")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateCreateCustomerRequestBody(customer))
+                    .content(this.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isBadRequest());
 
-        customer.setPassword("PASSWORD123");
-        customer.setConfirmPassword("PASSWORD123");
+        registerRequest.setPassword("PASSWORD123");
+        registerRequest.setConfirmPassword("PASSWORD123");
 
         this.mockMvc.perform(
                 post("/customer")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateCreateCustomerRequestBody(customer))
+                    .content(this.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isBadRequest());
 
-        customer.setPassword("123456789");
-        customer.setConfirmPassword("123456789");
+        registerRequest.setPassword("123456789");
+        registerRequest.setConfirmPassword("123456789");
 
         this.mockMvc.perform(
                 post("/customer")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateCreateCustomerRequestBody(customer))
-            )
-            .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void testCreateCustomer_PasswordsDoNotMatch() throws Exception {
-        Customer customer = new Customer();
-        customer.setName("Customer 5");
-        customer.setEmail("customer5@email.com");
-        customer.setPassword("Password123");
-        customer.setConfirmPassword("Password321");
-
-        this.mockMvc.perform(
-                post("/customer")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateCreateCustomerRequestBody(customer))
+                    .content(this.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void testCreateAndGetCustomer_HappyPath() throws Exception {
-        Customer customer = new Customer();
-        customer.setName("Customer 6");
-        customer.setEmail("customer6@email.com");
-        customer.setPassword("Password123");
-        customer.setConfirmPassword("Password123");
+    public void testRegister_PasswordsDoNotMatch() throws Exception {
+        RegisterRequest registerRequest = new RegisterRequest(
+            "Customer 5",
+            "customer5@email.com",
+            "Password123",
+            "321Password"
+        );
+
+        this.mockMvc.perform(
+                post("/customer")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(this.generateRegisterRequestBody(registerRequest))
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testRegisterAndGetCustomer_HappyPath() throws Exception {
+        RegisterRequest registerRequest = new RegisterRequest(
+            "Customer 6",
+            "customer6@email.com",
+            "Password123",
+            "Password123"
+        );
 
         MvcResult result = this.mockMvc.perform(
                 post("/customer")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateCreateCustomerRequestBody(customer))
+                    .content(this.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isOk())
             .andReturn();
@@ -194,6 +207,17 @@ public class CustomerIntegrationTest {
                 get("/customer/9999")
             )
             .andExpect(status().isNotFound());
+    }
+
+    /**
+     * Given a register request object, generate a JSON string.
+     *
+     * @param registerRequest The register request object to convert to JSON.
+     * @return The JSON string corresponding to the given register request object.
+     * @throws JsonProcessingException When JSON processing fails.
+     */
+    private String generateRegisterRequestBody(RegisterRequest registerRequest) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(registerRequest);
     }
 
     /**
