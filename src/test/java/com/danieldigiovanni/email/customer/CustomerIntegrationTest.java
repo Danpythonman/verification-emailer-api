@@ -1,12 +1,9 @@
 package com.danieldigiovanni.email.customer;
 
-import com.danieldigiovanni.email.ContextPathRequestPostProcessor;
+import com.danieldigiovanni.email.AddServletPathRequestPostProcessor;
 import com.danieldigiovanni.email.auth.RegisterRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,8 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,6 +38,7 @@ public class CustomerIntegrationTest {
 
         this.mockMvc.perform(
                 post("/register")
+                    .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(this.generateRegisterRequestBody(registerRequest))
             )
@@ -59,14 +55,16 @@ public class CustomerIntegrationTest {
         );
 
         this.mockMvc.perform(
-                post("/customer")
+                post("/register")
+                    .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(this.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isOk());
 
         this.mockMvc.perform(
-                post("/customer")
+                post("/register")
+                    .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(this.generateRegisterRequestBody(registerRequest))
             )
@@ -83,7 +81,8 @@ public class CustomerIntegrationTest {
         );
 
         this.mockMvc.perform(
-                post("/customer")
+                post("/register")
+                    .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(this.generateRegisterRequestBody(registerRequest))
             )
@@ -100,7 +99,8 @@ public class CustomerIntegrationTest {
         );
 
         this.mockMvc.perform(
-                post("/customer")
+                post("/register")
+                    .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(this.generateRegisterRequestBody(registerRequest))
             )
@@ -110,7 +110,8 @@ public class CustomerIntegrationTest {
         registerRequest.setConfirmPassword("password");
 
         this.mockMvc.perform(
-                post("/customer")
+                post("/register")
+                    .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(this.generateRegisterRequestBody(registerRequest))
             )
@@ -120,7 +121,8 @@ public class CustomerIntegrationTest {
         registerRequest.setConfirmPassword("PASSWORD");
 
         this.mockMvc.perform(
-                post("/customer")
+                post("/register")
+                    .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(this.generateRegisterRequestBody(registerRequest))
             )
@@ -130,7 +132,8 @@ public class CustomerIntegrationTest {
         registerRequest.setConfirmPassword("password123");
 
         this.mockMvc.perform(
-                post("/customer")
+                post("/register")
+                    .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(this.generateRegisterRequestBody(registerRequest))
             )
@@ -140,7 +143,8 @@ public class CustomerIntegrationTest {
         registerRequest.setConfirmPassword("PASSWORD123");
 
         this.mockMvc.perform(
-                post("/customer")
+                post("/register")
+                    .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(this.generateRegisterRequestBody(registerRequest))
             )
@@ -150,7 +154,8 @@ public class CustomerIntegrationTest {
         registerRequest.setConfirmPassword("123456789");
 
         this.mockMvc.perform(
-                post("/customer")
+                post("/register")
+                    .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(this.generateRegisterRequestBody(registerRequest))
             )
@@ -167,7 +172,8 @@ public class CustomerIntegrationTest {
         );
 
         this.mockMvc.perform(
-                post("/customer")
+                post("/register")
+                    .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(this.generateRegisterRequestBody(registerRequest))
             )
@@ -184,7 +190,8 @@ public class CustomerIntegrationTest {
         );
 
         MvcResult result = this.mockMvc.perform(
-                post("/customer")
+                post("/register")
+                    .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(this.generateRegisterRequestBody(registerRequest))
             )
