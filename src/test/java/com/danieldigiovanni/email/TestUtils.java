@@ -1,6 +1,7 @@
 package com.danieldigiovanni.email;
 
 import com.danieldigiovanni.email.auth.AuthResponse;
+import com.danieldigiovanni.email.auth.LoginRequest;
 import com.danieldigiovanni.email.auth.RegisterRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,6 +30,19 @@ public class TestUtils {
      */
     public static String generateRegisterRequestBody(RegisterRequest registerRequest) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(registerRequest);
+    }
+
+    /**
+     * Given a {@link LoginRequest} object, generates a JSON string.
+     *
+     * @param loginRequest The login request to convert to JSON.
+     *
+     * @return The JSON string corresponding to the given login request.
+     *
+     * @throws JsonProcessingException If JSON processing fails.
+     */
+    public static String generateLoginRequestBody(LoginRequest loginRequest) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(loginRequest);
     }
 
     /**

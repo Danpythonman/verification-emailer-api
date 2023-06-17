@@ -24,7 +24,7 @@ public class AuthIntegrationTest {
     }
 
     @Test
-    public void testRegisterCustomer_HappyPath() throws Exception {
+    public void testRegister_HappyPath() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
             "Customer 1",
@@ -163,11 +163,30 @@ public class AuthIntegrationTest {
     }
 
     @Test
-    public void testRegister_PasswordsDoNotMatch() throws Exception {
+    public void testRegister_MissingConfirmPassword() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
             "Customer 5",
             "customer5@email.com",
+            "Password123",
+            null
+        );
+
+        this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtils.generateRegisterRequestBody(body))
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testRegister_PasswordsDoNotMatch() throws Exception {
+        String path = "/register";
+        RegisterRequest body = new RegisterRequest(
+            "Customer 6",
+            "customer6@email.com",
             "Password123",
             "321Password"
         );
@@ -179,6 +198,95 @@ public class AuthIntegrationTest {
                     .content(TestUtils.generateRegisterRequestBody(body))
             )
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testRegisterAndLogin_HappyPath() throws Exception {
+        String path = "/register";
+        RegisterRequest registerBody = new RegisterRequest(
+            "Customer 7",
+            "customer7@email.com",
+            "Password123",
+            "Password123"
+        );
+
+        this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                        TestUtils.generateRegisterRequestBody(registerBody)
+                    )
+            )
+            .andExpect(status().isOk());
+
+        path = "/login";
+        LoginRequest loginBody = new LoginRequest(
+            "customer7@email.com",
+            "Password123"
+        );
+
+        this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtils.generateLoginRequestBody(loginBody))
+            )
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testRegisterAndLogin_IncorrectPassword() throws Exception {
+        String path = "/register";
+        RegisterRequest registerBody = new RegisterRequest(
+            "Customer 8",
+            "customer8@email.com",
+            "Password123",
+            "Password123"
+        );
+
+        this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                        TestUtils.generateRegisterRequestBody(registerBody)
+                    )
+            )
+            .andExpect(status().isOk());
+
+        path = "/login";
+        LoginRequest loginBody = new LoginRequest(
+            "customer8@email.com",
+            "WrongPassword"
+        );
+
+        this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtils.generateLoginRequestBody(loginBody))
+            )
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testLogin_NotFound() throws Exception {
+        String path = "/login";
+        LoginRequest body = new LoginRequest(
+            "notfound@doesntexist.com",
+            "Password123"
+        );
+
+        this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                        TestUtils.generateLoginRequestBody(body)
+                    )
+            )
+            .andExpect(status().isNotFound());
     }
 
 }
