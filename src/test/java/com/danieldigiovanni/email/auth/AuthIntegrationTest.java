@@ -1,6 +1,7 @@
 package com.danieldigiovanni.email.auth;
 
 import com.danieldigiovanni.email.AddServletPathRequestPostProcessor;
+import com.danieldigiovanni.email.TestUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ public class AuthIntegrationTest {
                 post("/register")
                     .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isOk());
     }
@@ -55,7 +56,7 @@ public class AuthIntegrationTest {
                 post("/register")
                     .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isOk());
 
@@ -63,7 +64,7 @@ public class AuthIntegrationTest {
                 post("/register")
                     .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isConflict());
     }
@@ -81,7 +82,7 @@ public class AuthIntegrationTest {
                 post("/register")
                     .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isBadRequest());
     }
@@ -99,7 +100,7 @@ public class AuthIntegrationTest {
                 post("/register")
                     .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isBadRequest());
 
@@ -110,7 +111,7 @@ public class AuthIntegrationTest {
                 post("/register")
                     .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isBadRequest());
 
@@ -121,7 +122,7 @@ public class AuthIntegrationTest {
                 post("/register")
                     .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isBadRequest());
 
@@ -132,7 +133,7 @@ public class AuthIntegrationTest {
                 post("/register")
                     .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isBadRequest());
 
@@ -143,7 +144,7 @@ public class AuthIntegrationTest {
                 post("/register")
                     .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isBadRequest());
 
@@ -154,7 +155,7 @@ public class AuthIntegrationTest {
                 post("/register")
                     .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isBadRequest());
     }
@@ -172,20 +173,9 @@ public class AuthIntegrationTest {
                 post("/register")
                     .with(new AddServletPathRequestPostProcessor("/register"))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.generateRegisterRequestBody(registerRequest))
+                    .content(TestUtils.generateRegisterRequestBody(registerRequest))
             )
             .andExpect(status().isBadRequest());
-    }
-
-    /**
-     * Given a register request object, generate a JSON string.
-     *
-     * @param registerRequest The register request object to convert to JSON.
-     * @return The JSON string corresponding to the given register request object.
-     * @throws JsonProcessingException When JSON processing fails.
-     */
-    private String generateRegisterRequestBody(RegisterRequest registerRequest) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(registerRequest);
     }
 
 }
