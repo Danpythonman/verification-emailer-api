@@ -1,5 +1,6 @@
 package com.danieldigiovanni.email.customer;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +15,7 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
     @NotNull
     private String name;
@@ -21,6 +23,7 @@ public class Customer {
     @Email
     private String email;
     @NotNull
+    @JsonIgnore
     private String password;
     private Boolean isVerified;
     private Date createdAt;
