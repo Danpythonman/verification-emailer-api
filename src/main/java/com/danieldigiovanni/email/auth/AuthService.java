@@ -105,6 +105,9 @@ public class AuthService {
             )
         );
 
+        customer.setLastLogin(new Date());
+        customer = this.customerRepository.save(customer);
+
         String jwt = JwtUtils.generateToken(
             customer,
             this.TOKEN_DURATION_MILLIS,
