@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,10 +51,7 @@ public class CustomerIntegrationTest {
             result.getResponse().getContentAsString()
         );
 
-        String id = TestUtils.extractClaimsFromToken(authResponse.getToken())
-            .getSubject();
-
-        path = "/customer/" + id;
+        path = "/customer";
 
         this.mockMvc.perform(
                 get(path)
