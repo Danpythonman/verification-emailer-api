@@ -53,13 +53,21 @@ public class CustomerIntegrationTest {
 
         path = "/customer";
 
-        this.mockMvc.perform(
+        result = this.mockMvc.perform(
                 get(path)
                     .header(
                         "Authorization", "Bearer " + authResponse.getToken()
                     )
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn();
+
+        Customer customer = TestUtils.readJsonIntoCustomer(
+            result.getResponse().getContentAsString()
+        );
+
+        assertNull(customer.getId());
+        assertNull(customer.getPassword());
     }
 
 }
