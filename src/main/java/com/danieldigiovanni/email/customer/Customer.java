@@ -24,28 +24,34 @@ public class Customer {
     private String password;
     private Boolean isVerified;
     private Date createdAt;
+    private Date updatedAt;
+    private Date lastLogin;
 
     public Customer() { }
 
-    public Customer(@NotNull String name, @NotNull String email, @NotNull String password, Boolean isVerified, Date createdAt) {
+    public Customer(@NotNull String name, @NotNull String email, @NotNull String password, Boolean isVerified, Date createdAt, Date updatedAt, Date lastLogin) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.isVerified = isVerified;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.lastLogin = lastLogin;
     }
 
-    public Customer(Long id, @NotNull String name, @NotNull String email, @NotNull String password, Boolean isVerified, Date createdAt) {
+    public Customer(Long id, @NotNull String name, @NotNull String email, @NotNull String password, Boolean isVerified, Date createdAt, Date updatedAt, Date lastLogin) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.isVerified = isVerified;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.lastLogin = lastLogin;
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -53,7 +59,7 @@ public class Customer {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -61,7 +67,7 @@ public class Customer {
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setEmail(String email) {
@@ -69,7 +75,7 @@ public class Customer {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -77,19 +83,35 @@ public class Customer {
     }
 
     public Boolean getIsVerified() {
-        return isVerified;
+        return this.isVerified;
     }
 
     public void setIsVerified(Boolean verified) {
-        isVerified = verified;
+        this.isVerified = verified;
     }
 
     public Date getCreatedAt() {
-        return createdAt;
+        return this.createdAt;
     }
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return this.updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Date getLastLogin() {
+        return this.lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
     }
 
 }
