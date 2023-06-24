@@ -3,6 +3,7 @@ package com.danieldigiovanni.email;
 import com.danieldigiovanni.email.auth.AuthResponse;
 import com.danieldigiovanni.email.auth.LoginRequest;
 import com.danieldigiovanni.email.auth.RegisterRequest;
+import com.danieldigiovanni.email.customer.Customer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -43,6 +44,19 @@ public class TestUtils {
      */
     public static String generateLoginRequestBody(LoginRequest loginRequest) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(loginRequest);
+    }
+
+    /**
+     * Given a JSON string, generates an {@link Customer} object.
+     *
+     * @param jsonString The JSON string to convert to an customer.
+     *
+     * @return The customer corresponding to the JSON string.
+     *
+     * @throws JsonProcessingException If JSON processing fails.
+     */
+    public static Customer readJsonIntoCustomer(String jsonString) throws JsonProcessingException {
+        return new ObjectMapper().readValue(jsonString, Customer.class);
     }
 
     /**

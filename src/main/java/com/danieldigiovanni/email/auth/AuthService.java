@@ -58,21 +58,24 @@ public class AuthService {
             registerRequest.getPassword()
         );
 
-        if (
-            !this.passwordEncoder.matches(
-                registerRequest.getConfirmPassword(),
-                hashedPassword
-            )
-        ) {
+        boolean passwordsMatch = this.passwordEncoder.matches(
+            registerRequest.getConfirmPassword(),
+            hashedPassword
+        );
+        if (!passwordsMatch) {
             throw new ValidationException("Passwords do not match");
         }
+
+        Date now = new Date();
 
         Customer customer = new Customer(
             registerRequest.getName(),
             registerRequest.getEmail(),
             hashedPassword,
             false,
-            new Date()
+            now,
+            now,
+            now
         );
 
         customer = this.customerRepository.save(customer);
@@ -101,6 +104,9 @@ public class AuthService {
                 loginRequest.getPassword()
             )
         );
+
+        customer.setLastLogin(new Date());
+        customer = this.customerRepository.save(customer);
 
         String jwt = JwtUtils.generateToken(
             customer,

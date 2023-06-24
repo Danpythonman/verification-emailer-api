@@ -27,7 +27,8 @@ public class CustomerDetailsService implements UserDetailsService {
             );
 
         return new CustomerDetails(
-            customer.getEmail(), customer.getPassword()
+            customer.getId().toString(),
+            customer.getPassword()
         );
     }
 
