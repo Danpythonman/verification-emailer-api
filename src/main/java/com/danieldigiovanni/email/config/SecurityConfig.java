@@ -30,6 +30,7 @@ public class SecurityConfig {
             .csrf((csrf) -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(AuthConstants.WHITELISTED_ROUTES).permitAll()
+                .requestMatchers("/error").anonymous()
                 .anyRequest().authenticated())
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
