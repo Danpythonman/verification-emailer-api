@@ -56,6 +56,16 @@ public class CustomerService {
             throw new ValidationException("Old password is incorrect");
         }
 
+        boolean newPasswordSameAsOldPassword = this.passwordEncoder.matches(
+            updates.getNewPassword(),
+            customer.getPassword()
+        );
+        if (newPasswordSameAsOldPassword) {
+            throw new ValidationException(
+                "New password cannot be the same as the old password"
+            );
+        }
+
         // Throws exception if password does not match constraints
         AuthUtils.checkPasswordValidity(updates.getNewPassword());
 
