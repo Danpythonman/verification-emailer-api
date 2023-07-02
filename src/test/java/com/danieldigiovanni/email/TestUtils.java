@@ -13,6 +13,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 
+import java.util.Map;
+
 /**
  * Helper methods for tests.
  */
@@ -44,6 +46,19 @@ public class TestUtils {
      */
     public static String generateLoginRequestBody(LoginRequest loginRequest) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(loginRequest);
+    }
+
+    /**
+     * Given a {@link Map} object, generates a JSON string.
+     *
+     * @param map  The map to convert to JSON.
+     *
+     * @return The JSON string corresponding to the given map.
+     *
+     * @throws JsonProcessingException If JSON processing fails.
+     */
+    public static <K, V> String generateMapBody(Map<K, V> map) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(map);
     }
 
     /**
