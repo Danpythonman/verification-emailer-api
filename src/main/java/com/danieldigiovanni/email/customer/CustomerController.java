@@ -44,6 +44,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/customer")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCustomer(Principal principal) {
         this.customerService.deleteCustomer(principal);
     }
