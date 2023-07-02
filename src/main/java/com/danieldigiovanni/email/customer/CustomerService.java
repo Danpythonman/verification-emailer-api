@@ -1,13 +1,12 @@
 package com.danieldigiovanni.email.customer;
 
+import com.danieldigiovanni.email.customer.dto.UpdateCustomerRequest;
 import com.danieldigiovanni.email.utils.AuthUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.Date;
@@ -37,25 +36,11 @@ public class CustomerService {
         ));
     }
 
-    public Customer updateCustomer(Principal principal, Map<String, String> updates) {
+    public Customer updateCustomer(Principal principal, UpdateCustomerRequest updates) {
         Customer customer = this.getCustomerByPrincipal(principal);
 
-        if (updates.containsKey("email") || updates.containsKey("password")) {
-            throw new ValidationException(
-                "Email and password fields must be updated through their " +
-                    "own endpoints"
-            );
-        }
-
-        if (updates.containsKey("name")) {
-            customer.setName(updates.get("name"));
-            customer.setUpdatedAt(new Date());
-        } else {
-            throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Valid fields to update are: [\"name\"]"
-            );
-        }
+        customer.setName(updates.getName());
+        customer.setUpdatedAt(new Date());
 
         return this.customerRepository.save(customer);
     }

@@ -1,6 +1,8 @@
 package com.danieldigiovanni.email.customer;
 
+import com.danieldigiovanni.email.customer.dto.UpdateCustomerRequest;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,7 +31,7 @@ public class CustomerController {
     }
 
     @PatchMapping("/customer")
-    public Customer updateCustomer(Principal principal, @RequestBody Map<String, String> updates) {
+    public Customer updateCustomer(Principal principal, @RequestBody @Valid UpdateCustomerRequest updates) {
         return this.customerService.updateCustomer(principal, updates);
     }
 
