@@ -1,6 +1,7 @@
 package com.danieldigiovanni.email.customer;
 
 import com.danieldigiovanni.email.customer.dto.UpdateCustomerRequest;
+import com.danieldigiovanni.email.customer.dto.UpdatePasswordRequest;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
-import java.util.Map;
 
 @RestController
 public class CustomerController {
@@ -36,7 +36,7 @@ public class CustomerController {
     }
 
     @PutMapping("/customer/password")
-    public Customer updatePassword(Principal principal, @RequestBody Map<String, String> updates) {
+    public Customer updatePassword(Principal principal, @RequestBody @Valid UpdatePasswordRequest updates) {
         return this.customerService.updatePassword(principal, updates);
     }
 

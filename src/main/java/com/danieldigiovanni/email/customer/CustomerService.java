@@ -1,6 +1,7 @@
 package com.danieldigiovanni.email.customer;
 
 import com.danieldigiovanni.email.customer.dto.UpdateCustomerRequest;
+import com.danieldigiovanni.email.customer.dto.UpdatePasswordRequest;
 import com.danieldigiovanni.email.utils.AuthUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.Date;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -45,22 +45,11 @@ public class CustomerService {
         return this.customerRepository.save(customer);
     }
 
-    public Customer updatePassword(Principal principal, Map<String, String> updates) {
+    public Customer updatePassword(Principal principal, UpdatePasswordRequest updates) {
         Customer customer = this.getCustomerByPrincipal(principal);
 
-        if (
-            !updates.containsKey("old")
-                || !updates.containsKey("new")
-                || !updates.containsKey("confirm")
-        ) {
-            throw new ValidationException(
-                "Old password, new password, and new password confirmation " +
-                    "must all be provided"
-            );
-        }
-
         boolean oldPasswordCorrect = this.passwordEncoder.matches(
-            updates.get("old"),
+            updates.getOldPassword(),
             customer.getPassword()
         );
         if (!oldPasswordCorrect) {
@@ -68,13 +57,14 @@ public class CustomerService {
         }
 
         // Throws exception if password does not match constraints
-        AuthUtils.checkPasswordValidity(updates.get("new"));
+        AuthUtils.checkPasswordValidity(updates.getNewPassword());
 
         String newHashedPassword = this.passwordEncoder.encode(
-            updates.get("new")
+            updates.getNewPassword()
         );
+
         boolean newPasswordsMatch = this.passwordEncoder.matches(
-            updates.get("confirm"),
+            updates.getConfirmPassword(),
             newHashedPassword
         );
         if (!newPasswordsMatch) {
