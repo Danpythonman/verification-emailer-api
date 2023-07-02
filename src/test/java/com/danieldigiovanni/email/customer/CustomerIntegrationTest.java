@@ -253,13 +253,18 @@ public class CustomerIntegrationTest {
             "Password123"
         );
 
-        this.mockMvc.perform(
+        MvcResult result = this.mockMvc.perform(
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtils.generateRegisterRequestBody(body))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn();
+
+        AuthResponse authResponse = TestUtils.readJsonIntoAuthResponse(
+            result.getResponse().getContentAsString()
+        );
 
         path = "/customer/password";
 
@@ -270,6 +275,9 @@ public class CustomerIntegrationTest {
 
         this.mockMvc.perform(
                 put(path)
+                    .header(
+                        "Authorization", "Bearer " + authResponse.getToken()
+                    )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtils.generateUpdatePasswordRequestBody(
@@ -289,13 +297,18 @@ public class CustomerIntegrationTest {
             "Password123"
         );
 
-        this.mockMvc.perform(
+        MvcResult result = this.mockMvc.perform(
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtils.generateRegisterRequestBody(body))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn();
+
+        AuthResponse authResponse = TestUtils.readJsonIntoAuthResponse(
+            result.getResponse().getContentAsString()
+        );
 
         path = "/customer/password";
 
@@ -306,6 +319,9 @@ public class CustomerIntegrationTest {
 
         this.mockMvc.perform(
                 put(path)
+                    .header(
+                        "Authorization", "Bearer " + authResponse.getToken()
+                    )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtils.generateUpdatePasswordRequestBody(
@@ -318,7 +334,10 @@ public class CustomerIntegrationTest {
         updateBody.setConfirmPassword("password");
 
         this.mockMvc.perform(
-                post(path)
+                put(path)
+                    .header(
+                        "Authorization", "Bearer " + authResponse.getToken()
+                    )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtils.generateUpdatePasswordRequestBody(
@@ -331,7 +350,10 @@ public class CustomerIntegrationTest {
         updateBody.setConfirmPassword("PASSWORD");
 
         this.mockMvc.perform(
-                post(path)
+                put(path)
+                    .header(
+                        "Authorization", "Bearer " + authResponse.getToken()
+                    )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtils.generateUpdatePasswordRequestBody(
@@ -344,7 +366,10 @@ public class CustomerIntegrationTest {
         updateBody.setConfirmPassword("password123");
 
         this.mockMvc.perform(
-                post(path)
+                put(path)
+                    .header(
+                        "Authorization", "Bearer " + authResponse.getToken()
+                    )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtils.generateUpdatePasswordRequestBody(
@@ -357,7 +382,10 @@ public class CustomerIntegrationTest {
         updateBody.setConfirmPassword("PASSWORD123");
 
         this.mockMvc.perform(
-                post(path)
+                put(path)
+                    .header(
+                        "Authorization", "Bearer " + authResponse.getToken()
+                    )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtils.generateUpdatePasswordRequestBody(
@@ -370,7 +398,10 @@ public class CustomerIntegrationTest {
         updateBody.setConfirmPassword("123456789");
 
         this.mockMvc.perform(
-                post(path)
+                put(path)
+                    .header(
+                        "Authorization", "Bearer " + authResponse.getToken()
+                    )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtils.generateUpdatePasswordRequestBody(
@@ -390,13 +421,18 @@ public class CustomerIntegrationTest {
             "Password123"
         );
 
-        this.mockMvc.perform(
+        MvcResult result = this.mockMvc.perform(
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtils.generateRegisterRequestBody(body))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn();
+
+        AuthResponse authResponse = TestUtils.readJsonIntoAuthResponse(
+            result.getResponse().getContentAsString()
+        );
 
         path = "/customer/password";
 
@@ -407,6 +443,9 @@ public class CustomerIntegrationTest {
 
         this.mockMvc.perform(
                 put(path)
+                    .header(
+                        "Authorization", "Bearer " + authResponse.getToken()
+                    )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtils.generateUpdatePasswordRequestBody(
@@ -426,13 +465,18 @@ public class CustomerIntegrationTest {
             "Password123"
         );
 
-        this.mockMvc.perform(
+        MvcResult result = this.mockMvc.perform(
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtils.generateRegisterRequestBody(body))
             )
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andReturn();
+
+        AuthResponse authResponse = TestUtils.readJsonIntoAuthResponse(
+            result.getResponse().getContentAsString()
+        );
 
         path = "/customer/password";
 
@@ -443,6 +487,9 @@ public class CustomerIntegrationTest {
 
         this.mockMvc.perform(
                 put(path)
+                    .header(
+                        "Authorization", "Bearer " + authResponse.getToken()
+                    )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtils.generateUpdatePasswordRequestBody(
