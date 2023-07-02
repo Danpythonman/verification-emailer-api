@@ -415,4 +415,40 @@ public class CustomerIntegrationTest {
             .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void testRegisterCustomerAndUpdatePassword_NewPasswordSameAsOldPassword() throws Exception {
+        String path = "/register";
+        RegisterRequest body = new RegisterRequest(
+            "Customer 8",
+            "customer8@email.com",
+            "Password123",
+            "Password123"
+        );
+
+        this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtils.generateRegisterRequestBody(body))
+            )
+            .andExpect(status().isOk());
+
+        path = "/customer/password";
+
+        UpdatePasswordRequest updateBody = new UpdatePasswordRequest();
+        updateBody.setOldPassword("Password123");
+        updateBody.setNewPassword("Password123");
+        updateBody.setConfirmPassword("Password123");
+
+        this.mockMvc.perform(
+                put(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtils.generateUpdatePasswordRequestBody(
+                        updateBody
+                    ))
+            )
+            .andExpect(status().isBadRequest());
+    }
+
 }
