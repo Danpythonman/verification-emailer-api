@@ -1,5 +1,8 @@
 package com.danieldigiovanni.email.auth;
 
+import com.danieldigiovanni.email.auth.dto.AuthResponse;
+import com.danieldigiovanni.email.auth.dto.LoginRequest;
+import com.danieldigiovanni.email.auth.dto.RegisterRequest;
 import com.danieldigiovanni.email.customer.Customer;
 import com.danieldigiovanni.email.customer.CustomerRepository;
 import com.danieldigiovanni.email.utils.AuthUtils;
