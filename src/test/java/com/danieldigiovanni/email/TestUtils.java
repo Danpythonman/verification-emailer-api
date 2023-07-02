@@ -7,12 +7,6 @@ import com.danieldigiovanni.email.customer.Customer;
 import com.danieldigiovanni.email.customer.dto.UpdatePasswordRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
 
 import java.util.Map;
 
@@ -80,7 +74,7 @@ public class TestUtils {
     /**
      * Given a JSON string, generates an {@link Customer} object.
      *
-     * @param jsonString The JSON string to convert to an customer.
+     * @param jsonString The JSON string to convert to a customer.
      *
      * @return The customer corresponding to the JSON string.
      *
@@ -101,30 +95,6 @@ public class TestUtils {
      */
     public static AuthResponse readJsonIntoAuthResponse(String jsonString) throws JsonProcessingException {
         return new ObjectMapper().readValue(jsonString, AuthResponse.class);
-    }
-
-    /**
-     * Parses a JWT without validating the signature.
-     *
-     * @param jwt The JWT to be parsed.
-     *
-     * @return The claims from the JWT.
-     *
-     * @throws IllegalArgumentException If the JWT is null, empty, or only
-     *                                  whitespace.
-     * @throws MalformedJwtException    If the JWT does not have a valid
-     *                                  format.
-     * @throws UnsupportedJwtException  If the JWT claims do not have a valid
-     *                                  format.
-     * @throws ExpiredJwtException      If the JWT is expired.
-     */
-    public static Claims extractClaimsFromToken(String jwt) throws IllegalArgumentException, MalformedJwtException, UnsupportedJwtException, ExpiredJwtException {
-        String[] jwtParts = jwt.split("\\.");
-        String unsignedJwt = jwtParts[0] + "." + jwtParts[1] + ".";
-
-        JwtParser jwtParser = Jwts.parserBuilder().build();
-
-        return jwtParser.parseClaimsJwt(unsignedJwt).getBody();
     }
 
 }
