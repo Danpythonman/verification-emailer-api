@@ -89,4 +89,10 @@ public class CustomerService {
         return this.customerRepository.save(customer);
     }
 
+    public void deleteCustomer(Principal principal) {
+        Customer customer = this.getCustomerByPrincipal(principal);
+
+        this.customerRepository.deleteById(customer.getId());
+    }
+
 }

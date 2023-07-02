@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -40,6 +41,11 @@ public class CustomerController {
     @PutMapping("/customer/password")
     public Customer updatePassword(Principal principal, @RequestBody @Valid UpdatePasswordRequest updates) {
         return this.customerService.updatePassword(principal, updates);
+    }
+
+    @DeleteMapping("/customer")
+    public void deleteCustomer(Principal principal) {
+        this.customerService.deleteCustomer(principal);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
