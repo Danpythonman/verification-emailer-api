@@ -1,4 +1,4 @@
-package com.danieldigiovanni.email.auth;
+package com.danieldigiovanni.email.auth.dto;
 
 /**
  * Format of the response body for response to login and register requests.

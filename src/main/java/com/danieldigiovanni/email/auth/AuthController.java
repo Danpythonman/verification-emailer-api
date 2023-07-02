@@ -1,5 +1,8 @@
 package com.danieldigiovanni.email.auth;
 
+import com.danieldigiovanni.email.auth.dto.AuthResponse;
+import com.danieldigiovanni.email.auth.dto.LoginRequest;
+import com.danieldigiovanni.email.auth.dto.RegisterRequest;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;

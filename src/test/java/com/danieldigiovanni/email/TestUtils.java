@@ -1,8 +1,8 @@
 package com.danieldigiovanni.email;
 
-import com.danieldigiovanni.email.auth.AuthResponse;
-import com.danieldigiovanni.email.auth.LoginRequest;
-import com.danieldigiovanni.email.auth.RegisterRequest;
+import com.danieldigiovanni.email.auth.dto.AuthResponse;
+import com.danieldigiovanni.email.auth.dto.LoginRequest;
+import com.danieldigiovanni.email.auth.dto.RegisterRequest;
 import com.danieldigiovanni.email.customer.Customer;
 import com.danieldigiovanni.email.customer.dto.UpdatePasswordRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;

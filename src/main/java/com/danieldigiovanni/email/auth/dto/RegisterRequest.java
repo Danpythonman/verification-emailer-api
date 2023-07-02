@@ -1,4 +1,4 @@
-package com.danieldigiovanni.email.auth;
+package com.danieldigiovanni.email.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

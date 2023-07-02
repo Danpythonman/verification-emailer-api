@@ -2,8 +2,8 @@ package com.danieldigiovanni.email.customer;
 
 import com.danieldigiovanni.email.AddServletPathRequestPostProcessor;
 import com.danieldigiovanni.email.TestUtils;
-import com.danieldigiovanni.email.auth.AuthResponse;
-import com.danieldigiovanni.email.auth.RegisterRequest;
+import com.danieldigiovanni.email.auth.dto.AuthResponse;
+import com.danieldigiovanni.email.auth.dto.RegisterRequest;
 import com.danieldigiovanni.email.customer.dto.UpdatePasswordRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

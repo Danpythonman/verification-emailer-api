@@ -2,6 +2,8 @@ package com.danieldigiovanni.email.auth;
 
 import com.danieldigiovanni.email.AddServletPathRequestPostProcessor;
 import com.danieldigiovanni.email.TestUtils;
+import com.danieldigiovanni.email.auth.dto.LoginRequest;
+import com.danieldigiovanni.email.auth.dto.RegisterRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
