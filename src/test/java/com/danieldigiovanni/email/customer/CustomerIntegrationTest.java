@@ -38,8 +38,8 @@ public class CustomerIntegrationTest {
     public void testRegisterAndGetCustomer_HappyPath() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
-            "Customer 1",
-            "customer1@email.com",
+            "Customer 2.1",
+            "customer2.1@email.com",
             "Password123",
             "Password123"
         );
@@ -81,8 +81,8 @@ public class CustomerIntegrationTest {
     public void testRegisterCustomerAndUpdateName_HappyPath() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
-            "Customer 2",
-            "customer2@email.com",
+            "Customer 2.2",
+            "customer2.2@email.com",
             "Password123",
             "Password123"
         );
@@ -128,8 +128,8 @@ public class CustomerIntegrationTest {
     public void testRegisterCustomerAndUpdateName_InvalidBody() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
-            "Customer 3",
-            "customer3@email.com",
+            "Customer 2.3",
+            "customer2.3@email.com",
             "Password123",
             "Password123"
         );
@@ -169,8 +169,8 @@ public class CustomerIntegrationTest {
     public void testRegisterCustomerAndUpdatePassword_HappyPath() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
-            "Customer 4",
-            "customer4@email.com",
+            "Customer 2.4",
+            "customer2.4@email.com",
             "Password123",
             "Password123"
         );
@@ -218,7 +218,7 @@ public class CustomerIntegrationTest {
                     .content(
                         TestUtils.generateMapBody(
                             Map.of(
-                                "email", "customer4@email.com",
+                                "email", "customer2.4@email.com",
                                 "password", "Password123"
                             )
                         )
@@ -233,7 +233,7 @@ public class CustomerIntegrationTest {
                     .content(
                         TestUtils.generateMapBody(
                             Map.of(
-                                "email", "customer4@email.com",
+                                "email", "customer2.4@email.com",
                                 "password", "312Password"
                             )
                         )
@@ -246,8 +246,8 @@ public class CustomerIntegrationTest {
     public void testRegisterCustomerAndUpdatePassword_OldPasswordIncorrect() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
-            "Customer 5",
-            "customer5@email.com",
+            "Customer 2.5",
+            "customer2.5@email.com",
             "Password123",
             "Password123"
         );
@@ -282,8 +282,8 @@ public class CustomerIntegrationTest {
     public void testRegisterCustomerAndUpdatePassword_InvalidPassword() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
-            "Customer 6",
-            "customer6@email.com",
+            "Customer 2.6",
+            "customer2.6@email.com",
             "Password123",
             "Password123"
         );
@@ -383,8 +383,8 @@ public class CustomerIntegrationTest {
     public void testRegisterCustomerAndUpdatePassword_ConfirmPasswordDoesNotMatch() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
-            "Customer 7",
-            "customer7@email.com",
+            "Customer 2.7",
+            "customer2.7@email.com",
             "Password123",
             "Password123"
         );
@@ -419,8 +419,8 @@ public class CustomerIntegrationTest {
     public void testRegisterCustomerAndUpdatePassword_NewPasswordSameAsOldPassword() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
-            "Customer 8",
-            "customer8@email.com",
+            "Customer 2.8",
+            "customer2.8@email.com",
             "Password123",
             "Password123"
         );

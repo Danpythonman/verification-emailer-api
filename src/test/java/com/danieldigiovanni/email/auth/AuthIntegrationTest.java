@@ -29,8 +29,8 @@ public class AuthIntegrationTest {
     public void testRegister_HappyPath() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
-            "Customer 1",
-            "customer1@email.com",
+            "Customer 1.1",
+            "customer1.1@email.com",
             "Password123",
             "Password123"
         );
@@ -48,8 +48,8 @@ public class AuthIntegrationTest {
     public void testRegister_AlreadyExists() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
-            "Customer 2",
-            "customer2@email.com",
+            "Customer 1.2",
+            "customer1.2@email.com",
             "Password123",
             "Password123"
         );
@@ -75,8 +75,8 @@ public class AuthIntegrationTest {
     public void testRegister_InvalidEmail() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
-            "Customer 3",
-            "customer3.com",
+            "Customer 1.3",
+            "customer1.3.com",
             "Password123",
             "Password123"
         );
@@ -94,8 +94,8 @@ public class AuthIntegrationTest {
     public void testRegister_InvalidPassword() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
-            "Customer 4",
-            "customer4@email.com",
+            "Customer 1.4",
+            "customer1.4@email.com",
             "pw",
             "pw"
         );
@@ -168,8 +168,8 @@ public class AuthIntegrationTest {
     public void testRegister_MissingConfirmPassword() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
-            "Customer 5",
-            "customer5@email.com",
+            "Customer 1.5",
+            "customer1.5@email.com",
             "Password123",
             null
         );
@@ -187,8 +187,8 @@ public class AuthIntegrationTest {
     public void testRegister_PasswordsDoNotMatch() throws Exception {
         String path = "/register";
         RegisterRequest body = new RegisterRequest(
-            "Customer 6",
-            "customer6@email.com",
+            "Customer 1.6",
+            "customer1.6@email.com",
             "Password123",
             "321Password"
         );
@@ -206,8 +206,8 @@ public class AuthIntegrationTest {
     public void testRegisterAndLogin_HappyPath() throws Exception {
         String path = "/register";
         RegisterRequest registerBody = new RegisterRequest(
-            "Customer 7",
-            "customer7@email.com",
+            "Customer 1.7",
+            "customer1.7@email.com",
             "Password123",
             "Password123"
         );
@@ -224,7 +224,7 @@ public class AuthIntegrationTest {
 
         path = "/login";
         LoginRequest loginBody = new LoginRequest(
-            "customer7@email.com",
+            "customer1.7@email.com",
             "Password123"
         );
 
@@ -241,8 +241,8 @@ public class AuthIntegrationTest {
     public void testRegisterAndLogin_IncorrectPassword() throws Exception {
         String path = "/register";
         RegisterRequest registerBody = new RegisterRequest(
-            "Customer 8",
-            "customer8@email.com",
+            "Customer 1.8",
+            "customer1.8@email.com",
             "Password123",
             "Password123"
         );
@@ -259,7 +259,7 @@ public class AuthIntegrationTest {
 
         path = "/login";
         LoginRequest loginBody = new LoginRequest(
-            "customer8@email.com",
+            "customer1.8@email.com",
             "WrongPassword"
         );
 
