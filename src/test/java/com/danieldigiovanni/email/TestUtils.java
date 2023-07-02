@@ -4,6 +4,7 @@ import com.danieldigiovanni.email.auth.AuthResponse;
 import com.danieldigiovanni.email.auth.LoginRequest;
 import com.danieldigiovanni.email.auth.RegisterRequest;
 import com.danieldigiovanni.email.customer.Customer;
+import com.danieldigiovanni.email.customer.dto.UpdatePasswordRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -49,9 +50,24 @@ public class TestUtils {
     }
 
     /**
+     * Given am {@link UpdatePasswordRequest} object, generates a JSON string.
+     *
+     * @param updatePasswordRequest The update password request to convert to
+     *                              JSON.
+     *
+     * @return The JSON string corresponding to the given update password
+     * request.
+     *
+     * @throws JsonProcessingException If JSON processing fails.
+     */
+    public static String generateUpdatePasswordRequestBody(UpdatePasswordRequest updatePasswordRequest) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(updatePasswordRequest);
+    }
+
+    /**
      * Given a {@link Map} object, generates a JSON string.
      *
-     * @param map  The map to convert to JSON.
+     * @param map The map to convert to JSON.
      *
      * @return The JSON string corresponding to the given map.
      *
