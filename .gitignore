@@ -39,3 +39,5 @@ build/
 
 secrets.properties
 secrets-prod.properties
+
+**/spring.log
