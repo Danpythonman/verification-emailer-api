@@ -46,11 +46,14 @@ public class Code {
     /**
      * Checks if the code is active.
      * <p>
-     * The code is active if its time limit and
-     * maximum number of incorrect attempts have both not been reached.
+     * The code is active if it:
+     * <ul>
+     *     <li>is not expired (has not reached maximum time limit),</li>
+     *     <li>has not reached the maximum number of attempts,</li>
+     *     <li>and is not already fulfilled.</li>
+     * </ul>
      *
-     * @return True if the code is not expired and the maximum number of
-     * incorrect attempts has not been reached.
+     * @return True if the code is active.
      */
     public boolean isActive() {
         boolean codeIsExpired = TimeUnit.MILLISECONDS.toMinutes(
@@ -60,7 +63,9 @@ public class Code {
         boolean maximumAttemptsReached
             = this.getIncorrectAttempts() >= this.maximumAttempts;
 
-        return !codeIsExpired && !maximumAttemptsReached;
+        boolean codeIsFulFilled = this.fulfilledAt != null;
+
+        return !codeIsFulFilled && !codeIsExpired && !maximumAttemptsReached;
     }
 
     public Long getId() {
