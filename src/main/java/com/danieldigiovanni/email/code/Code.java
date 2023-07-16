@@ -68,6 +68,13 @@ public class Code {
         return !codeIsFulFilled && !codeIsExpired && !maximumAttemptsReached;
     }
 
+    /**
+     * Increments the number of incorrect attempts by one.
+     */
+    public void incrementIncorrectAttempts() {
+        this.incorrectAttempts++;
+    }
+
     public Long getId() {
         return this.id;
     }
