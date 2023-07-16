@@ -55,7 +55,7 @@ public class Code {
     public boolean isActive() {
         boolean codeIsExpired = TimeUnit.MILLISECONDS.toMinutes(
             new Date().getTime() - this.createdAt.getTime()
-        ) < this.maximumDurationInMinutes;
+        ) >= this.maximumDurationInMinutes;
 
         boolean maximumAttemptsReached
             = this.getIncorrectAttempts() >= this.maximumAttempts;
