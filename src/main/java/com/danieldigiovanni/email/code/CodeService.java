@@ -1,7 +1,10 @@
 package com.danieldigiovanni.email.code;
 
 import com.danieldigiovanni.email.code.dto.SendCodeRequest;
+import com.danieldigiovanni.email.code.dto.VerifyCodeRequest;
+import com.danieldigiovanni.email.code.exceptions.IncorrectCodeException;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -63,6 +66,34 @@ public class CodeService {
             "maxAttempts", code.getMaximumAttempts(),
             "maxDuration", code.getMaximumDurationInMinutes()
         );
+    }
+
+    public Object verifyCode(VerifyCodeRequest verifyCodeRequest) {
+        List<Code> codes = this.codeRepository.getCodesByEmail(
+            verifyCodeRequest.getEmail()
+        );
+
+        Code code = codes.stream()
+            .filter(Code::isActive)
+            .findFirst()
+            .orElseThrow(() -> new EntityNotFoundException(
+                "No active code found for " + verifyCodeRequest.getEmail()
+            ));
+
+        boolean codeMatches = this.bcrypt.matches(
+            verifyCodeRequest.getCode(),
+            code.getHash()
+        );
+        if (!codeMatches) {
+            code.incrementIncorrectAttempts();
+            this.codeRepository.save(code);
+            throw new IncorrectCodeException();
+        }
+
+        code.setFulfilledAt(new Date());
+        this.codeRepository.save(code);
+
+        return "Success";
     }
 
 }
