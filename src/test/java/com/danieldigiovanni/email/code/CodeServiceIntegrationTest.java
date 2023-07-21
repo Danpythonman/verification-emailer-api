@@ -3,7 +3,6 @@ package com.danieldigiovanni.email.code;
 import com.danieldigiovanni.email.AddServletPathRequestPostProcessor;
 import com.danieldigiovanni.email.TestUtils;
 import com.danieldigiovanni.email.auth.dto.AuthResponse;
-import com.danieldigiovanni.email.auth.dto.LoginRequest;
 import com.danieldigiovanni.email.auth.dto.RegisterRequest;
 import com.danieldigiovanni.email.code.dto.SendCodeRequest;
 import com.danieldigiovanni.email.code.dto.CodeResponse;
@@ -59,7 +58,7 @@ public class CodeServiceIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
-                        TestUtils.generateRegisterRequestBody(registerBody)
+                        TestUtils.generateJson(registerBody)
                     )
             )
             .andExpect(status().isOk())
@@ -90,7 +89,7 @@ public class CodeServiceIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .header("Authorization", "Bearer " + this.token)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateBody(sendCodeRequest))
+                    .content(TestUtils.generateJson(sendCodeRequest))
             )
             .andExpect(status().isOk())
             .andReturn();
@@ -120,7 +119,7 @@ public class CodeServiceIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .header("Authorization", "Bearer " + this.token)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateBody(verifyCodeRequest))
+                    .content(TestUtils.generateJson(verifyCodeRequest))
             )
             .andExpect(status().isNoContent());
     }
@@ -142,7 +141,7 @@ public class CodeServiceIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .header("Authorization", "Bearer " + this.token)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateBody(sendCodeRequest))
+                    .content(TestUtils.generateJson(sendCodeRequest))
             )
             .andExpect(status().isOk())
             .andReturn();
@@ -173,7 +172,7 @@ public class CodeServiceIntegrationTest {
                         .with(new AddServletPathRequestPostProcessor(path))
                         .header("Authorization", "Bearer " + this.token)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtils.generateBody(verifyCodeRequest))
+                        .content(TestUtils.generateJson(verifyCodeRequest))
                 )
                 .andExpect(status().isBadRequest());
         }
@@ -184,7 +183,7 @@ public class CodeServiceIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .header("Authorization", "Bearer " + this.token)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateBody(verifyCodeRequest))
+                    .content(TestUtils.generateJson(verifyCodeRequest))
             )
             .andExpect(status().isNoContent());
     }
@@ -206,7 +205,7 @@ public class CodeServiceIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .header("Authorization", "Bearer " + this.token)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateBody(sendCodeRequest))
+                    .content(TestUtils.generateJson(sendCodeRequest))
             )
             .andExpect(status().isOk())
             .andReturn();
@@ -237,7 +236,7 @@ public class CodeServiceIntegrationTest {
                         .with(new AddServletPathRequestPostProcessor(path))
                         .header("Authorization", "Bearer " + this.token)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(TestUtils.generateBody(verifyCodeRequest))
+                        .content(TestUtils.generateJson(verifyCodeRequest))
                 )
                 .andExpect(status().isBadRequest());
         }
@@ -247,7 +246,7 @@ public class CodeServiceIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .header("Authorization", "Bearer " + this.token)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateBody(verifyCodeRequest))
+                    .content(TestUtils.generateJson(verifyCodeRequest))
             )
             .andExpect(status().isNotFound());
     }
@@ -269,7 +268,7 @@ public class CodeServiceIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .header("Authorization", "Bearer " + this.token)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateBody(sendCodeRequest))
+                    .content(TestUtils.generateJson(sendCodeRequest))
             )
             .andExpect(status().isOk());
 
@@ -278,7 +277,7 @@ public class CodeServiceIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .header("Authorization", "Bearer " + this.token)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateBody(sendCodeRequest))
+                    .content(TestUtils.generateJson(sendCodeRequest))
             )
             .andExpect(status().isConflict())
             .andReturn();

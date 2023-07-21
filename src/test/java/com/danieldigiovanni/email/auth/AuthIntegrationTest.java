@@ -39,7 +39,7 @@ public class AuthIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isOk());
     }
@@ -58,7 +58,7 @@ public class AuthIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isOk());
 
@@ -66,7 +66,7 @@ public class AuthIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isConflict());
     }
@@ -85,7 +85,7 @@ public class AuthIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isBadRequest());
     }
@@ -104,7 +104,7 @@ public class AuthIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isBadRequest());
 
@@ -115,7 +115,7 @@ public class AuthIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isBadRequest());
 
@@ -126,7 +126,7 @@ public class AuthIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isBadRequest());
 
@@ -137,7 +137,7 @@ public class AuthIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isBadRequest());
 
@@ -148,7 +148,7 @@ public class AuthIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isBadRequest());
 
@@ -159,7 +159,7 @@ public class AuthIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isBadRequest());
     }
@@ -178,7 +178,7 @@ public class AuthIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isBadRequest());
     }
@@ -197,7 +197,7 @@ public class AuthIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isBadRequest());
     }
@@ -217,7 +217,7 @@ public class AuthIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
-                        TestUtils.generateRegisterRequestBody(registerBody)
+                        TestUtils.generateJson(registerBody)
                     )
             )
             .andExpect(status().isOk());
@@ -232,7 +232,7 @@ public class AuthIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateLoginRequestBody(loginBody))
+                    .content(TestUtils.generateJson(loginBody))
             )
             .andExpect(status().isOk());
     }
@@ -252,7 +252,7 @@ public class AuthIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
-                        TestUtils.generateRegisterRequestBody(registerBody)
+                        TestUtils.generateJson(registerBody)
                     )
             )
             .andExpect(status().isOk());
@@ -267,7 +267,7 @@ public class AuthIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateLoginRequestBody(loginBody))
+                    .content(TestUtils.generateJson(loginBody))
             )
             .andExpect(status().isUnauthorized());
     }
@@ -285,7 +285,7 @@ public class AuthIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
-                        TestUtils.generateLoginRequestBody(body)
+                        TestUtils.generateJson(body)
                     )
             )
             .andExpect(status().isNotFound());
