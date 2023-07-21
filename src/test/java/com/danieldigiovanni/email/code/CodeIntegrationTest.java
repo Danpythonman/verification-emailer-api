@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CodeServiceIntegrationTest {
+public class CodeIntegrationTest {
 
     @SpyBean
     private CodeUtils codeUtils;
@@ -39,7 +39,7 @@ public class CodeServiceIntegrationTest {
     private String token;
 
     @Autowired
-    public CodeServiceIntegrationTest(MockMvc mockMvc) {
+    public CodeIntegrationTest(MockMvc mockMvc) {
         this.mockMvc = mockMvc;
     }
 
