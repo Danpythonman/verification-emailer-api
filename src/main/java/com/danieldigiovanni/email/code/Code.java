@@ -140,6 +140,7 @@ public class Code {
     }
 
     public static class CodeBuilder {
+
         private String email;
         private String hash;
         private Date createdAt;
@@ -174,6 +175,7 @@ public class Code {
         public Code build() {
             return new Code(this);
         }
+
     }
 
 }

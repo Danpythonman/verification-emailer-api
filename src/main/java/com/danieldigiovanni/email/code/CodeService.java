@@ -1,32 +1,30 @@
 package com.danieldigiovanni.email.code;
 
 import com.danieldigiovanni.email.code.dto.SendCodeRequest;
+import com.danieldigiovanni.email.code.dto.CodeResponse;
 import com.danieldigiovanni.email.code.dto.VerifyCodeRequest;
 import com.danieldigiovanni.email.code.exceptions.IncorrectCodeException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class CodeService {
 
     private final CodeRepository codeRepository;
-    private final BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+    private final CodeUtils codeUtils;
 
     @Autowired
-    public CodeService(CodeRepository codeRepository) {
+    public CodeService(CodeRepository codeRepository, CodeUtils codeUtils) {
         this.codeRepository = codeRepository;
+        this.codeUtils = codeUtils;
     }
 
-    public Object sendCode(SendCodeRequest sendCodeRequest) {
+    public CodeResponse sendCode(SendCodeRequest sendCodeRequest) {
         List<Code> codes = this.codeRepository.getCodesByEmail(
             sendCodeRequest.getEmail()
         );
@@ -39,12 +37,11 @@ public class CodeService {
             );
         }
 
-        String randomCode = new SecureRandom()
-            .ints(sendCodeRequest.getLength(), 0, 10)
-            .mapToObj(String::valueOf)
-            .collect(Collectors.joining());
+        String randomCode = this.codeUtils.generateRandomCode(
+            sendCodeRequest.getLength()
+        );
 
-        String hash = bcrypt.encode(randomCode);
+        String hash = this.codeUtils.generateHash(randomCode);
 
         Code code = Code.builder()
             .email(sendCodeRequest.getEmail())
@@ -55,20 +52,14 @@ public class CodeService {
                 sendCodeRequest.getMaximumDurationInMinutes())
             .build();
 
-        this.codeRepository.save(code);
+        code = this.codeRepository.save(code);
 
         // TODO: Send email
 
-        return Map.of(
-            "code", randomCode,
-            "hash", code.getHash(),
-            "incorrectAttempts", code.getIncorrectAttempts(),
-            "maxAttempts", code.getMaximumAttempts(),
-            "maxDuration", code.getMaximumDurationInMinutes()
-        );
+        return new CodeResponse(code);
     }
 
-    public Object verifyCode(VerifyCodeRequest verifyCodeRequest) {
+    public CodeResponse verifyCode(VerifyCodeRequest verifyCodeRequest) {
         List<Code> codes = this.codeRepository.getCodesByEmail(
             verifyCodeRequest.getEmail()
         );
@@ -80,20 +71,20 @@ public class CodeService {
                 "No active code found for " + verifyCodeRequest.getEmail()
             ));
 
-        boolean codeMatches = this.bcrypt.matches(
+        boolean codeMatches = this.codeUtils.matches(
             verifyCodeRequest.getCode(),
             code.getHash()
         );
         if (!codeMatches) {
             code.incrementIncorrectAttempts();
-            this.codeRepository.save(code);
-            throw new IncorrectCodeException();
+            code = this.codeRepository.save(code);
+            throw new IncorrectCodeException(code);
         }
 
         code.setFulfilledAt(new Date());
-        this.codeRepository.save(code);
+        code = this.codeRepository.save(code);
 
-        return "Success";
+        return new CodeResponse(code);
     }
 
 }

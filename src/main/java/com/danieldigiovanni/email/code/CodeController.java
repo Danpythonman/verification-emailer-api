@@ -1,6 +1,7 @@
 package com.danieldigiovanni.email.code;
 
 import com.danieldigiovanni.email.code.dto.SendCodeRequest;
+import com.danieldigiovanni.email.code.dto.CodeResponse;
 import com.danieldigiovanni.email.code.dto.VerifyCodeRequest;
 import com.danieldigiovanni.email.code.exceptions.IncorrectCodeException;
 import jakarta.persistence.EntityExistsException;
@@ -30,19 +31,20 @@ public class CodeController {
     }
 
     @PostMapping("/code/send")
-    public Object sendCode(@RequestBody @Valid SendCodeRequest sendCodeRequest) {
+    public CodeResponse sendCode(@RequestBody @Valid SendCodeRequest sendCodeRequest) {
         return this.codeService.sendCode(sendCodeRequest);
     }
 
     @PostMapping("/code/verify")
-    public Object verifyCode(@RequestBody @Valid VerifyCodeRequest verifyCodeRequest) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public CodeResponse verifyCode(@RequestBody @Valid VerifyCodeRequest verifyCodeRequest) {
         return this.codeService.verifyCode(verifyCodeRequest);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IncorrectCodeException.class)
-    public String handleIncorrectCodeException(IncorrectCodeException exception) {
-        return exception.getMessage();
+    public CodeResponse handleIncorrectCodeException(IncorrectCodeException exception) {
+        return exception.generateResponse();
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
