@@ -17,6 +17,14 @@ public class TestUtils {
 
     private TestUtils() { }
 
+    public static <T> String generateBody(T request) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(request);
+    }
+
+    public static <T> T parseJson(String jsonString, Class<T> objectType) throws JsonProcessingException {
+        return new ObjectMapper().readValue(jsonString, objectType);
+    }
+
     /**
      * Given a {@link RegisterRequest} object, generates a JSON string.
      *
