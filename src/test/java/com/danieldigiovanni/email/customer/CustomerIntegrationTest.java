@@ -49,13 +49,14 @@ public class CustomerIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isOk())
             .andReturn();
 
-        AuthResponse authResponse = TestUtils.readJsonIntoAuthResponse(
-            result.getResponse().getContentAsString()
+        AuthResponse authResponse = TestUtils.parseJson(
+            result.getResponse().getContentAsString(),
+            AuthResponse.class
         );
 
         path = "/customer";
@@ -70,8 +71,9 @@ public class CustomerIntegrationTest {
             .andExpect(status().isOk())
             .andReturn();
 
-        Customer customer = TestUtils.readJsonIntoCustomer(
-            result.getResponse().getContentAsString()
+        Customer customer = TestUtils.parseJson(
+            result.getResponse().getContentAsString(),
+            Customer.class
         );
 
         assertNull(customer.getId());
@@ -92,13 +94,14 @@ public class CustomerIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isOk())
             .andReturn();
 
-        AuthResponse authResponse = TestUtils.readJsonIntoAuthResponse(
-            result.getResponse().getContentAsString()
+        AuthResponse authResponse = TestUtils.parseJson(
+            result.getResponse().getContentAsString(),
+            AuthResponse.class
         );
 
         path = "/customer";
@@ -112,14 +115,15 @@ public class CustomerIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
-                        TestUtils.generateMapBody(Map.of("name", newName))
+                        TestUtils.generateJson(Map.of("name", newName))
                     )
             )
             .andExpect(status().isOk())
             .andReturn();
 
-        Customer customer = TestUtils.readJsonIntoCustomer(
-            result.getResponse().getContentAsString()
+        Customer customer = TestUtils.parseJson(
+            result.getResponse().getContentAsString(),
+            Customer.class
         );
 
         assertEquals(newName, customer.getName());
@@ -139,13 +143,14 @@ public class CustomerIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isOk())
             .andReturn();
 
-        AuthResponse authResponse = TestUtils.readJsonIntoAuthResponse(
-            result.getResponse().getContentAsString()
+        AuthResponse authResponse = TestUtils.parseJson(
+            result.getResponse().getContentAsString(),
+            AuthResponse.class
         );
 
         path = "/customer";
@@ -158,7 +163,7 @@ public class CustomerIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
-                        TestUtils.generateMapBody(
+                        TestUtils.generateJson(
                             Map.of("email", "new@email.com")
                         )
                     )
@@ -180,13 +185,14 @@ public class CustomerIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isOk())
             .andReturn();
 
-        AuthResponse authResponse = TestUtils.readJsonIntoAuthResponse(
-            result.getResponse().getContentAsString()
+        AuthResponse authResponse = TestUtils.parseJson(
+            result.getResponse().getContentAsString(),
+            AuthResponse.class
         );
 
         path = "/customer/password";
@@ -199,7 +205,7 @@ public class CustomerIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
-                        TestUtils.generateMapBody(
+                        TestUtils.generateJson(
                             Map.of(
                                 "oldPassword", "Password123",
                                 "newPassword", "312Password",
@@ -217,7 +223,7 @@ public class CustomerIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
-                        TestUtils.generateMapBody(
+                        TestUtils.generateJson(
                             Map.of(
                                 "email", "customer2.4@email.com",
                                 "password", "Password123"
@@ -232,7 +238,7 @@ public class CustomerIntegrationTest {
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
-                        TestUtils.generateMapBody(
+                        TestUtils.generateJson(
                             Map.of(
                                 "email", "customer2.4@email.com",
                                 "password", "312Password"
@@ -257,13 +263,14 @@ public class CustomerIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isOk())
             .andReturn();
 
-        AuthResponse authResponse = TestUtils.readJsonIntoAuthResponse(
-            result.getResponse().getContentAsString()
+        AuthResponse authResponse = TestUtils.parseJson(
+            result.getResponse().getContentAsString(),
+            AuthResponse.class
         );
 
         path = "/customer/password";
@@ -280,7 +287,7 @@ public class CustomerIntegrationTest {
                     )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateUpdatePasswordRequestBody(
+                    .content(TestUtils.generateJson(
                         updateBody
                     ))
             )
@@ -301,13 +308,14 @@ public class CustomerIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isOk())
             .andReturn();
 
-        AuthResponse authResponse = TestUtils.readJsonIntoAuthResponse(
-            result.getResponse().getContentAsString()
+        AuthResponse authResponse = TestUtils.parseJson(
+            result.getResponse().getContentAsString(),
+            AuthResponse.class
         );
 
         path = "/customer/password";
@@ -324,7 +332,7 @@ public class CustomerIntegrationTest {
                     )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateUpdatePasswordRequestBody(
+                    .content(TestUtils.generateJson(
                         updateBody
                     ))
             )
@@ -340,7 +348,7 @@ public class CustomerIntegrationTest {
                     )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateUpdatePasswordRequestBody(
+                    .content(TestUtils.generateJson(
                         updateBody
                     ))
             )
@@ -356,7 +364,7 @@ public class CustomerIntegrationTest {
                     )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateUpdatePasswordRequestBody(
+                    .content(TestUtils.generateJson(
                         updateBody
                     ))
             )
@@ -372,7 +380,7 @@ public class CustomerIntegrationTest {
                     )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateUpdatePasswordRequestBody(
+                    .content(TestUtils.generateJson(
                         updateBody
                     ))
             )
@@ -388,7 +396,7 @@ public class CustomerIntegrationTest {
                     )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateUpdatePasswordRequestBody(
+                    .content(TestUtils.generateJson(
                         updateBody
                     ))
             )
@@ -404,7 +412,7 @@ public class CustomerIntegrationTest {
                     )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateUpdatePasswordRequestBody(
+                    .content(TestUtils.generateJson(
                         updateBody
                     ))
             )
@@ -425,13 +433,14 @@ public class CustomerIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isOk())
             .andReturn();
 
-        AuthResponse authResponse = TestUtils.readJsonIntoAuthResponse(
-            result.getResponse().getContentAsString()
+        AuthResponse authResponse = TestUtils.parseJson(
+            result.getResponse().getContentAsString(),
+            AuthResponse.class
         );
 
         path = "/customer/password";
@@ -448,7 +457,7 @@ public class CustomerIntegrationTest {
                     )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateUpdatePasswordRequestBody(
+                    .content(TestUtils.generateJson(
                         updateBody
                     ))
             )
@@ -469,13 +478,14 @@ public class CustomerIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isOk())
             .andReturn();
 
-        AuthResponse authResponse = TestUtils.readJsonIntoAuthResponse(
-            result.getResponse().getContentAsString()
+        AuthResponse authResponse = TestUtils.parseJson(
+            result.getResponse().getContentAsString(),
+            AuthResponse.class
         );
 
         path = "/customer/password";
@@ -492,7 +502,7 @@ public class CustomerIntegrationTest {
                     )
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateUpdatePasswordRequestBody(
+                    .content(TestUtils.generateJson(
                         updateBody
                     ))
             )
@@ -513,13 +523,13 @@ public class CustomerIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateRegisterRequestBody(body))
+                    .content(TestUtils.generateJson(body))
             )
             .andExpect(status().isOk())
             .andReturn();
 
-        AuthResponse authResponse = TestUtils.readJsonIntoAuthResponse(
-            result.getResponse().getContentAsString()
+        AuthResponse authResponse = TestUtils.parseJson(
+            result.getResponse().getContentAsString(), AuthResponse.class
         );
 
         path = "/login";
@@ -528,7 +538,7 @@ public class CustomerIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateMapBody(Map.of(
+                    .content(TestUtils.generateJson(Map.of(
                         "email", body.getEmail(),
                         "password", body.getPassword()
                     )))
@@ -554,7 +564,7 @@ public class CustomerIntegrationTest {
                 post(path)
                     .with(new AddServletPathRequestPostProcessor(path))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtils.generateMapBody(Map.of(
+                    .content(TestUtils.generateJson(Map.of(
                         "email", body.getEmail(),
                         "password", body.getPassword()
                     )))

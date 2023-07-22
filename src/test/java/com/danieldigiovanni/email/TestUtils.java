@@ -1,14 +1,7 @@
 package com.danieldigiovanni.email;
 
-import com.danieldigiovanni.email.auth.dto.AuthResponse;
-import com.danieldigiovanni.email.auth.dto.LoginRequest;
-import com.danieldigiovanni.email.auth.dto.RegisterRequest;
-import com.danieldigiovanni.email.customer.Customer;
-import com.danieldigiovanni.email.customer.dto.UpdatePasswordRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.Map;
 
 /**
  * Helper methods for tests.
@@ -18,83 +11,34 @@ public class TestUtils {
     private TestUtils() { }
 
     /**
-     * Given a {@link RegisterRequest} object, generates a JSON string.
+     * Generates a JSON string from an object to be used as a request body.
      *
-     * @param registerRequest The register request to convert to JSON.
+     * @param request The object to be converted to JSON.
      *
-     * @return The JSON string corresponding to the given register request.
+     * @return The JSON string representing the object.
+     *
+     * @param <T> The type of the object.
      *
      * @throws JsonProcessingException If JSON processing fails.
      */
-    public static String generateRegisterRequestBody(RegisterRequest registerRequest) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(registerRequest);
+    public static <T> String generateJson(T request) throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(request);
     }
 
     /**
-     * Given a {@link LoginRequest} object, generates a JSON string.
+     * Generates an object from JSON received from an API response.
      *
-     * @param loginRequest The login request to convert to JSON.
+     * @param jsonString The string to be parsed into an object.
+     * @param objectType The class of the object.
      *
-     * @return The JSON string corresponding to the given login request.
+     * @return An object corresponding to the given JSON.
      *
-     * @throws JsonProcessingException If JSON processing fails.
-     */
-    public static String generateLoginRequestBody(LoginRequest loginRequest) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(loginRequest);
-    }
-
-    /**
-     * Given am {@link UpdatePasswordRequest} object, generates a JSON string.
-     *
-     * @param updatePasswordRequest The update password request to convert to
-     *                              JSON.
-     *
-     * @return The JSON string corresponding to the given update password
-     * request.
+     * @param <T> The type of the object.
      *
      * @throws JsonProcessingException If JSON processing fails.
      */
-    public static String generateUpdatePasswordRequestBody(UpdatePasswordRequest updatePasswordRequest) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(updatePasswordRequest);
-    }
-
-    /**
-     * Given a {@link Map} object, generates a JSON string.
-     *
-     * @param map The map to convert to JSON.
-     *
-     * @return The JSON string corresponding to the given map.
-     *
-     * @throws JsonProcessingException If JSON processing fails.
-     */
-    public static <K, V> String generateMapBody(Map<K, V> map) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(map);
-    }
-
-    /**
-     * Given a JSON string, generates an {@link Customer} object.
-     *
-     * @param jsonString The JSON string to convert to a customer.
-     *
-     * @return The customer corresponding to the JSON string.
-     *
-     * @throws JsonProcessingException If JSON processing fails.
-     */
-    public static Customer readJsonIntoCustomer(String jsonString) throws JsonProcessingException {
-        return new ObjectMapper().readValue(jsonString, Customer.class);
-    }
-
-    /**
-     * Given a JSON string, generates an {@link AuthResponse} object.
-     *
-     * @param jsonString The JSON string to convert to an auth response.
-     *
-     * @return The auth response corresponding to the JSON string.
-     *
-     * @throws JsonProcessingException If JSON processing fails.
-     */
-    public static AuthResponse readJsonIntoAuthResponse(String jsonString) throws JsonProcessingException {
-        return new ObjectMapper().readValue(jsonString, AuthResponse.class);
+    public static <T> T parseJson(String jsonString, Class<T> objectType) throws JsonProcessingException {
+        return new ObjectMapper().readValue(jsonString, objectType);
     }
 
 }
