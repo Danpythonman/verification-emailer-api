@@ -7,6 +7,7 @@ import com.danieldigiovanni.email.code.exception.IncorrectCodeException;
 import com.danieldigiovanni.email.emailer.exception.ApiCallResponseBodyException;
 import com.danieldigiovanni.email.emailer.exception.ApiCallStatusException;
 import com.danieldigiovanni.email.emailer.exception.InvalidUrlException;
+import com.danieldigiovanni.email.emailer.exception.MailtrapEmailerException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -70,6 +71,13 @@ public class CodeController {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(InvalidUrlException.class)
     public String handleInvalidUrlException(InvalidUrlException exception) {
+        return exception.getMessage();
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(MailtrapEmailerException.class)
+    public String handleMailtrapEmailerException(MailtrapEmailerException exception) {
+        log.error(exception.getMessage(), exception);
         return exception.getMessage();
     }
 
