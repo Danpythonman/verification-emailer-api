@@ -1,4 +1,4 @@
-package com.danieldigiovanni.email.code.exceptions;
+package com.danieldigiovanni.email.code.exception;
 
 import com.danieldigiovanni.email.code.Code;
 import com.danieldigiovanni.email.code.dto.CodeResponse;

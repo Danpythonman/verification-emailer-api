@@ -3,7 +3,7 @@ package com.danieldigiovanni.email.code;
 import com.danieldigiovanni.email.code.dto.CodeResponse;
 import com.danieldigiovanni.email.code.dto.SendCodeRequest;
 import com.danieldigiovanni.email.code.dto.VerifyCodeRequest;
-import com.danieldigiovanni.email.code.exceptions.IncorrectCodeException;
+import com.danieldigiovanni.email.code.exception.IncorrectCodeException;
 import com.danieldigiovanni.email.emailer.exception.ApiCallResponseBodyException;
 import com.danieldigiovanni.email.emailer.exception.ApiCallStatusException;
 import com.danieldigiovanni.email.emailer.exception.InvalidUrlException;
