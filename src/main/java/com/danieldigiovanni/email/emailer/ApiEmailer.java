@@ -40,6 +40,12 @@ public class ApiEmailer implements Emailer {
      * {@inheritDoc}
      * <p>
      * Sends an actual email via an API.
+     *
+     * @throws InvalidUrlException          If the API URL is invalid.
+     * @throws ApiCallStatusException       If the API responds with an
+     *                                      unexpected status.
+     * @throws ApiCallResponseBodyException If the API responds with an
+     *                                      unexpected response body.
      */
     @Override
     public void sendEmail(String toAddress, String subject, String code, Integer duration) {
@@ -82,6 +88,8 @@ public class ApiEmailer implements Emailer {
      * @param content   The HTML content of the email.
      *
      * @return The response from the API.
+     *
+     * @throws InvalidUrlException If the call mail API URL is invalid.
      */
     private ResponseEntity<JsonNode> callMailApi(String toAddress, String subject, String content) {
         URI url;
@@ -122,6 +130,13 @@ public class ApiEmailer implements Emailer {
      * <p>
      * This works by calling the refresh token API and updating the property
      * {@code this.accessToken} with the access token returned from the API.
+     *
+     * @throws InvalidUrlException          If the refresh token URL is
+     *                                      invalid.
+     * @throws ApiCallStatusException       If the refresh token API responds
+     *                                      with an unexpected status.
+     * @throws ApiCallResponseBodyException If the refresh token API responds
+     *                                      with an unexpected response body.
      */
     private void refreshToken() {
         URI url;

@@ -27,4 +27,17 @@ public class ApiCallStatusException extends RuntimeException {
         this.responseBody = responseBody;
     }
 
+    /**
+     * Generates a message to be logged about this exception.
+     * <p>
+     * The log message contains the exception message, the HTTP status, and the
+     * response body.
+     *
+     * @return A message about this exception to be logged.
+     */
+    public String generateLogMessage() {
+        return this.getMessage() + " - Status: " + this.statusCode
+            + ", Response body: " + this.responseBody.toString();
+    }
+
 }

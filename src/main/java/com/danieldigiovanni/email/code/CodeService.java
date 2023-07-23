@@ -1,9 +1,10 @@
 package com.danieldigiovanni.email.code;
 
-import com.danieldigiovanni.email.code.dto.SendCodeRequest;
 import com.danieldigiovanni.email.code.dto.CodeResponse;
+import com.danieldigiovanni.email.code.dto.SendCodeRequest;
 import com.danieldigiovanni.email.code.dto.VerifyCodeRequest;
 import com.danieldigiovanni.email.code.exceptions.IncorrectCodeException;
+import com.danieldigiovanni.email.emailer.Emailer;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,13 @@ public class CodeService {
 
     private final CodeRepository codeRepository;
     private final CodeUtils codeUtils;
+    private final Emailer emailer;
 
     @Autowired
-    public CodeService(CodeRepository codeRepository, CodeUtils codeUtils) {
+    public CodeService(CodeRepository codeRepository, CodeUtils codeUtils, Emailer emailer) {
         this.codeRepository = codeRepository;
         this.codeUtils = codeUtils;
+        this.emailer = emailer;
     }
 
     public CodeResponse sendCode(SendCodeRequest sendCodeRequest) {
@@ -54,7 +57,12 @@ public class CodeService {
 
         code = this.codeRepository.save(code);
 
-        // TODO: Send email
+        this.emailer.sendEmail(
+            code.getEmail(),
+            "Verification Code",
+            randomCode,
+            code.getMaximumDurationInMinutes()
+        );
 
         return new CodeResponse(code);
     }
