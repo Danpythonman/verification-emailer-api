@@ -1,6 +1,8 @@
 package com.danieldigiovanni.email.config;
 
 import com.danieldigiovanni.email.emailer.ApiEmailer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +24,7 @@ public class ApiEmailerConfig {
     private final String authScheme;
     private final String emailHtmlTemplate;
     private final RestTemplate restTemplate;
+    private final Logger log = LoggerFactory.getLogger(ApiEmailerConfig.class);
 
     @Autowired
     public ApiEmailerConfig(
@@ -42,6 +45,7 @@ public class ApiEmailerConfig {
 
     @Bean
     public ApiEmailer emailer() {
+        this.log.info("Initializing API Emailer");
         return new ApiEmailer(
             this.fromAddress,
             this.sendEmailUrl,

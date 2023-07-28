@@ -1,6 +1,8 @@
 package com.danieldigiovanni.email.config;
 
 import com.danieldigiovanni.email.emailer.MailtrapEmailer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +21,8 @@ public class MailtrapEmailerConfig {
     private final String fromAddress;
     private final String emailHtmlTemplate;
     private final JavaMailSender mailSender;
+    private final Logger log =
+        LoggerFactory.getLogger(MailtrapEmailerConfig.class);
 
     @Autowired
     public MailtrapEmailerConfig(
@@ -33,6 +37,7 @@ public class MailtrapEmailerConfig {
 
     @Bean
     public MailtrapEmailer mailtrapEmailer() {
+        this.log.info("Initializing Mailtrap Emailer");
         return new MailtrapEmailer(
             this.fromAddress,
             this.emailHtmlTemplate,
