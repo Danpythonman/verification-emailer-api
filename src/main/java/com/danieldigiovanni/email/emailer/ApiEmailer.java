@@ -5,6 +5,8 @@ import com.danieldigiovanni.email.emailer.exception.ApiCallResponseBodyException
 import com.danieldigiovanni.email.emailer.exception.ApiCallStatusException;
 import com.danieldigiovanni.email.emailer.exception.InvalidUrlException;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -26,6 +28,7 @@ public class ApiEmailer implements Emailer {
     private final String emailHtmlTemplate;
     private final RestTemplate restTemplate;
     private String accessToken;
+    private final Logger log = LoggerFactory.getLogger(ApiEmailer.class);
 
     public ApiEmailer(String fromAddress, String sendEmailUrl, String refreshTokenUrl, String authScheme, String emailHtmlTemplate, RestTemplate restTemplate) {
         this.fromAddress = fromAddress;
@@ -50,6 +53,7 @@ public class ApiEmailer implements Emailer {
     @Override
     public void sendEmail(String toAddress, String subject, String code, Integer duration) {
         if (this.accessToken == null) {
+            this.log.info("Access token is null, refreshing token");
             this.refreshToken();
         }
 
@@ -57,6 +61,7 @@ public class ApiEmailer implements Emailer {
             .replace("{{code}}", code)
             .replace("{{duration}}", duration.toString());
 
+        this.log.info("Calling mail API");
         ResponseEntity<JsonNode> response = this.callMailApi(
             toAddress,
             subject,
@@ -64,7 +69,12 @@ public class ApiEmailer implements Emailer {
         );
 
         if (response.getStatusCode().is4xxClientError()) {
+            this.log.info(
+                "Mail API responded with status {}, refreshing token",
+                response.getStatusCode().value()
+            );
             this.refreshToken();
+            this.log.info("Calling mail API again");
             response = this.callMailApi(toAddress, subject, emailHtmlContent);
         }
 

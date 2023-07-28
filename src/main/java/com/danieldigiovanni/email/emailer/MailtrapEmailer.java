@@ -6,6 +6,8 @@ import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 
 /**
@@ -16,6 +18,7 @@ public class MailtrapEmailer implements Emailer {
     private final String fromAddress;
     private final String emailHtmlTemplate;
     private final JavaMailSender mailSender;
+    private final Logger log = LoggerFactory.getLogger(MailtrapEmailer.class);
 
     public MailtrapEmailer(String fromAddress, String emailHtmlTemplate, JavaMailSender mailSender) {
         this.fromAddress = fromAddress;
@@ -46,6 +49,7 @@ public class MailtrapEmailer implements Emailer {
             message.setSubject(subject);
             message.setContent(emailHtmlContent, "text/html; charset=utf-8");
 
+            this.log.info("Sending email to Mailtrap");
             mailSender.send(message);
         } catch (MessagingException exception) {
             throw new MailtrapEmailerException(exception);
