@@ -1,0 +1,84 @@
+{
+	"info": {
+		"_postman_id": "47a7ab07-848e-478c-9493-151537a02c18",
+		"name": "EmailerEndpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16405268"
+	},
+	"item": [
+		{
+			"name": "Send Code",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"test@email.com\",\r\n    \"maximumAttempts\": 5,\r\n    \"maximumDurationInMinutes\": 2,\r\n    \"length\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/code/send",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"code",
+						"send"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify Code",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"test@email.com\",\r\n    \"code\": \"12345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/code/verify",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"code",
+						"verify"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

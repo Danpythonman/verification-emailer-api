@@ -41,11 +41,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/register",
+					"raw": "{{host}}/register",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"register"
 					]
@@ -55,6 +54,23 @@
 		},
 		{
 			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {\r",
+							"    const res = pm.response.json();\r",
+							"    pm.environment.set(\"auth_token\", res.token);\r",
+							"} catch (err) {\r",
+							"    console.error(err);\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -71,11 +87,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/login",
+					"raw": "{{host}}/login",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"login"
 					]
@@ -111,11 +126,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/customer",
+					"raw": "{{host}}/customer",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"customer"
 					]
@@ -148,11 +162,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/customer",
+					"raw": "{{host}}/customer",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"customer"
 					]
@@ -185,11 +198,10 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/customer/password",
+					"raw": "{{host}}/customer/password",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"customer",
 						"password"
@@ -214,11 +226,10 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/customer",
+					"raw": "{{host}}/customer",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"customer"
 					]
