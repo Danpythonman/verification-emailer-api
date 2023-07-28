@@ -77,7 +77,7 @@ public class CodeIntegrationTest {
         doReturn("123").when(codeUtils).generateRandomCode(anyInt());
 
         SendCodeRequest sendCodeRequest = new SendCodeRequest();
-        sendCodeRequest.setEmail("test@email.com");
+        sendCodeRequest.setEmail("test1@email.com");
         sendCodeRequest.setLength(3);
         sendCodeRequest.setMaximumAttempts(5);
         sendCodeRequest.setMaximumDurationInMinutes(10);
@@ -110,7 +110,7 @@ public class CodeIntegrationTest {
         );
 
         VerifyCodeRequest verifyCodeRequest = new VerifyCodeRequest();
-        verifyCodeRequest.setEmail("test@email.com");
+        verifyCodeRequest.setEmail("test1@email.com");
         verifyCodeRequest.setCode("123");
 
         path = "/code/verify";
@@ -129,7 +129,7 @@ public class CodeIntegrationTest {
         doReturn("123").when(codeUtils).generateRandomCode(anyInt());
 
         SendCodeRequest sendCodeRequest = new SendCodeRequest();
-        sendCodeRequest.setEmail("test@email.com");
+        sendCodeRequest.setEmail("test2@email.com");
         sendCodeRequest.setLength(3);
         sendCodeRequest.setMaximumAttempts(5);
         sendCodeRequest.setMaximumDurationInMinutes(10);
@@ -162,7 +162,7 @@ public class CodeIntegrationTest {
         );
 
         VerifyCodeRequest verifyCodeRequest = new VerifyCodeRequest();
-        verifyCodeRequest.setEmail("test@email.com");
+        verifyCodeRequest.setEmail("test2@email.com");
         verifyCodeRequest.setCode("54321");
 
         path = "/code/verify";
@@ -193,7 +193,7 @@ public class CodeIntegrationTest {
         doReturn("123").when(codeUtils).generateRandomCode(anyInt());
 
         SendCodeRequest sendCodeRequest = new SendCodeRequest();
-        sendCodeRequest.setEmail("test@email.com");
+        sendCodeRequest.setEmail("test3@email.com");
         sendCodeRequest.setLength(3);
         sendCodeRequest.setMaximumAttempts(5);
         sendCodeRequest.setMaximumDurationInMinutes(10);
@@ -226,7 +226,7 @@ public class CodeIntegrationTest {
         );
 
         VerifyCodeRequest verifyCodeRequest = new VerifyCodeRequest();
-        verifyCodeRequest.setEmail("test@email.com");
+        verifyCodeRequest.setEmail("test3@email.com");
         verifyCodeRequest.setCode("54321");
 
         path = "/code/verify";
@@ -252,11 +252,11 @@ public class CodeIntegrationTest {
     }
 
     @Test
-    public void testGenerateAndVerifyCode_CodeAlreadyExists() throws Exception {
+    public void testGenerateCode_CodeAlreadyExists() throws Exception {
         doReturn("123").when(codeUtils).generateRandomCode(anyInt());
 
         SendCodeRequest sendCodeRequest = new SendCodeRequest();
-        sendCodeRequest.setEmail("test@email.com");
+        sendCodeRequest.setEmail("test4@email.com");
         sendCodeRequest.setLength(3);
         sendCodeRequest.setMaximumAttempts(5);
         sendCodeRequest.setMaximumDurationInMinutes(10);
@@ -281,6 +281,68 @@ public class CodeIntegrationTest {
             )
             .andExpect(status().isConflict())
             .andReturn();
+    }
+
+    @Test
+    public void testGenerateAndVerifyCode_NotYourCode() throws Exception {
+        doReturn("123").when(codeUtils).generateRandomCode(anyInt());
+
+        SendCodeRequest sendCodeRequest = new SendCodeRequest();
+        sendCodeRequest.setEmail("test5@email.com");
+        sendCodeRequest.setLength(3);
+        sendCodeRequest.setMaximumAttempts(5);
+        sendCodeRequest.setMaximumDurationInMinutes(10);
+
+        String path = "/code/send";
+
+        this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .header("Authorization", "Bearer " + this.token)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtils.generateJson(sendCodeRequest))
+            )
+            .andExpect(status().isOk());
+
+        path = "/register";
+        RegisterRequest registerBody = new RegisterRequest(
+            "Customer 3.2",
+            "customer3.2@email.com",
+            "Password123",
+            "Password123"
+        );
+
+        MvcResult response = this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                        TestUtils.generateJson(registerBody)
+                    )
+            )
+            .andExpect(status().isOk())
+            .andReturn();
+
+        AuthResponse authResponse = TestUtils.parseJson(
+            response.getResponse().getContentAsString(),
+            AuthResponse.class
+        );
+
+        String otherUserToken = authResponse.getToken();
+
+        path = "/code/verify";
+        VerifyCodeRequest verifyCodeRequest = new VerifyCodeRequest();
+        verifyCodeRequest.setEmail("test5@email.com");
+        verifyCodeRequest.setCode("123");
+
+        this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .header("Authorization", "Bearer " + otherUserToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtils.generateJson(verifyCodeRequest))
+            )
+            .andExpect(status().isForbidden());
     }
 
 }

@@ -4,6 +4,7 @@ import com.danieldigiovanni.email.code.dto.CodeResponse;
 import com.danieldigiovanni.email.code.dto.SendCodeRequest;
 import com.danieldigiovanni.email.code.dto.VerifyCodeRequest;
 import com.danieldigiovanni.email.code.exception.IncorrectCodeException;
+import com.danieldigiovanni.email.code.exception.NotYourCodeException;
 import com.danieldigiovanni.email.emailer.exception.ApiCallResponseBodyException;
 import com.danieldigiovanni.email.emailer.exception.ApiCallStatusException;
 import com.danieldigiovanni.email.emailer.exception.InvalidUrlException;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -38,14 +40,14 @@ public class CodeController {
     }
 
     @PostMapping("/code/send")
-    public CodeResponse sendCode(@RequestBody @Valid SendCodeRequest sendCodeRequest) {
-        return this.codeService.sendCode(sendCodeRequest);
+    public CodeResponse sendCode(Principal principal, @RequestBody @Valid SendCodeRequest sendCodeRequest) {
+        return this.codeService.sendCode(principal, sendCodeRequest);
     }
 
     @PostMapping("/code/verify")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public CodeResponse verifyCode(@RequestBody @Valid VerifyCodeRequest verifyCodeRequest) {
-        return this.codeService.verifyCode(verifyCodeRequest);
+    public CodeResponse verifyCode(Principal principal, @RequestBody @Valid VerifyCodeRequest verifyCodeRequest) {
+        return this.codeService.verifyCode(principal, verifyCodeRequest);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -79,6 +81,12 @@ public class CodeController {
     public String handleMailtrapEmailerException(MailtrapEmailerException exception) {
         log.error(exception.getMessage(), exception);
         return exception.getMessage();
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(NotYourCodeException.class)
+    public String handleMailtrapEmailerException(NotYourCodeException exception) {
+        return "You do not have access to the code you tried to verify";
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
