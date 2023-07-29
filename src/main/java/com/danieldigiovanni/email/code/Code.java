@@ -1,10 +1,14 @@
 package com.danieldigiovanni.email.code;
 
+import com.danieldigiovanni.email.customer.Customer;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +19,9 @@ public class Code {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Customer customer;
     @NotNull
     private String email;
     @NotNull
@@ -32,6 +39,7 @@ public class Code {
     public Code() { }
 
     private Code(CodeBuilder codeBuilder) {
+        this.customer = codeBuilder.customer;
         this.email = codeBuilder.email;
         this.hash = codeBuilder.hash;
         this.createdAt = codeBuilder.createdAt;
@@ -81,6 +89,14 @@ public class Code {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Customer getCustomer() {
+        return this.customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public String getEmail() {
@@ -141,11 +157,17 @@ public class Code {
 
     public static class CodeBuilder {
 
+        private Customer customer;
         private String email;
         private String hash;
         private Date createdAt;
         private Integer maximumAttempts;
         private Integer maximumDurationInMinutes;
+
+        public CodeBuilder customer(Customer customer) {
+            this.customer = customer;
+            return this;
+        }
 
         public CodeBuilder email(String email) {
             this.email = email;

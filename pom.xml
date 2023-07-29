@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.danieldigiovanni</groupId>
     <artifactId>email</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0-SNAPSHOT</version>
     <name>email</name>
     <description>REST API sending verification emails</description>
     <properties>
@@ -37,6 +37,10 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
             <version>6.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
         <dependency>
