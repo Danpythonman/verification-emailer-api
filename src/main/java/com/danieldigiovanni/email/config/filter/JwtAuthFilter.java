@@ -3,7 +3,6 @@ package com.danieldigiovanni.email.config.filter;
 import com.danieldigiovanni.email.auth.CustomerDetails;
 import com.danieldigiovanni.email.auth.CustomerDetailsService;
 import com.danieldigiovanni.email.auth.JwtUtils;
-import com.danieldigiovanni.email.constants.AuthConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -15,6 +14,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,13 +36,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final CustomerDetailsService customerDetailsService;
     private final JwtUtils jwtUtils;
-    private final String TOKEN_SECRET_KEY;
+    private final List<String> whitelistedRoutes;
+    private final String tokenSecretKey;
 
     @Autowired
-    public JwtAuthFilter(CustomerDetailsService customerDetailsService, JwtUtils jwtUtils, @Value("${token-secret-key}") String tokenSecretKey) {
+    public JwtAuthFilter(
+        CustomerDetailsService customerDetailsService,
+        JwtUtils jwtUtils,
+        @Qualifier("whitelistedRoutes") List<String> whitelistedRoutes,
+        @Value("${token-secret-key}") String tokenSecretKey
+    ) {
         this.customerDetailsService = customerDetailsService;
         this.jwtUtils = jwtUtils;
-        this.TOKEN_SECRET_KEY = tokenSecretKey;
+        this.whitelistedRoutes = whitelistedRoutes;
+        this.tokenSecretKey = tokenSecretKey;
     }
 
     /**
@@ -77,10 +84,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
      */
     @Override
     public void doFilterInternal(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain) throws ServletException, IOException {
-        if (
-            List.of(AuthConstants.WHITELISTED_ROUTES)
-                .contains(request.getServletPath())
-        ) {
+        if (this.whitelistedRoutes.contains(request.getServletPath())) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -99,7 +103,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             claims = this.jwtUtils.extractClaimsFromToken(
                 jwt,
-                this.TOKEN_SECRET_KEY
+                this.tokenSecretKey
             );
         } catch (
             IllegalArgumentException

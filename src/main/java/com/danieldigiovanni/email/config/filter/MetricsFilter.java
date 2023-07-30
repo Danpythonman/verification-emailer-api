@@ -1,6 +1,5 @@
 package com.danieldigiovanni.email.config.filter;
 
-import com.danieldigiovanni.email.constants.AuthConstants;
 import com.danieldigiovanni.email.metrics.Metrics;
 import com.danieldigiovanni.email.metrics.MetricsService;
 import jakarta.annotation.Nonnull;
@@ -10,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -26,10 +26,15 @@ import java.util.List;
 public class MetricsFilter extends OncePerRequestFilter {
 
     private final MetricsService metricsService;
+    private final List<String> whitelistedRoutes;
     private final Logger log = LoggerFactory.getLogger(MetricsFilter.class);
 
-    public MetricsFilter(MetricsService metricsService) {
+    public MetricsFilter(
+        MetricsService metricsService,
+        @Qualifier("whitelistedRoutes") List<String> whitelistedRoutes
+    ) {
         this.metricsService = metricsService;
+        this.whitelistedRoutes = whitelistedRoutes;
     }
 
     /**
@@ -49,10 +54,7 @@ public class MetricsFilter extends OncePerRequestFilter {
      */
     @Override
     protected void doFilterInternal(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain) throws ServletException, IOException {
-        if (
-            List.of(AuthConstants.WHITELISTED_ROUTES)
-                .contains(request.getServletPath())
-        ) {
+        if (this.whitelistedRoutes.contains(request.getServletPath())) {
             // No metrics tracked for routes that don't require authorization
             filterChain.doFilter(request, response);
             return;
