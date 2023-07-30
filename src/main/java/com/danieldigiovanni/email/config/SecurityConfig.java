@@ -1,5 +1,7 @@
 package com.danieldigiovanni.email.config;
 
+import com.danieldigiovanni.email.config.filter.JwtAuthFilter;
+import com.danieldigiovanni.email.config.filter.LoggingFilter;
 import com.danieldigiovanni.email.constants.AuthConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

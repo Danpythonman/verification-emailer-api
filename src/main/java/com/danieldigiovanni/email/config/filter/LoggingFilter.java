@@ -1,4 +1,4 @@
-package com.danieldigiovanni.email.config;
+package com.danieldigiovanni.email.config.filter;
 
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
