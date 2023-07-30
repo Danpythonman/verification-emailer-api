@@ -1,8 +1,8 @@
 package com.danieldigiovanni.email.customer;
 
+import com.danieldigiovanni.email.auth.AuthUtils;
 import com.danieldigiovanni.email.customer.dto.UpdateCustomerRequest;
 import com.danieldigiovanni.email.customer.dto.UpdatePasswordRequest;
-import com.danieldigiovanni.email.utils.AuthUtils;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +18,13 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthUtils authUtils;
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder) {
+    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder, AuthUtils authUtils) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authUtils = authUtils;
     }
 
     public Customer getCustomerByPrincipal(Principal principal) {
@@ -67,7 +69,7 @@ public class CustomerService {
         }
 
         // Throws exception if password does not match constraints
-        AuthUtils.checkPasswordValidity(updates.getNewPassword());
+        this.authUtils.checkPasswordValidity(updates.getNewPassword());
 
         String newHashedPassword = this.passwordEncoder.encode(
             updates.getNewPassword()

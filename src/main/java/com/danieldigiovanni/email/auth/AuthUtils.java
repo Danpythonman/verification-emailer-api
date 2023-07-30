@@ -1,16 +1,13 @@
-package com.danieldigiovanni.email.utils;
+package com.danieldigiovanni.email.auth;
 
 import jakarta.validation.ValidationException;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Utils for authentication and authorization.
- */
-public final class AuthUtils {
-
-    private AuthUtils() { }
+@Component
+public class AuthUtils {
 
     /**
      * Throws exception if password constraints are not satisfied.
@@ -27,7 +24,7 @@ public final class AuthUtils {
      *
      * @throws ValidationException If password is not valid.
      */
-    public static void checkPasswordValidity(String password) throws ValidationException {
+    public void checkPasswordValidity(String password) throws ValidationException {
         final int MINIMUM_PASSWORD_LENGTH = 6;
         List<String> errorMessages = new ArrayList<>();
 
@@ -42,10 +39,14 @@ public final class AuthUtils {
             errorMessages.add("Password must have at least 1 number");
         }
         if (!password.matches(".*[a-z].*")) {
-            errorMessages.add("Password must have at least 1 lower case letter");
+            errorMessages.add(
+                "Password must have at least 1 lower case letter"
+            );
         }
         if (!password.matches(".*[A-Z].*")) {
-            errorMessages.add("Password must have at least 1 upper case letter");
+            errorMessages.add(
+                "Password must have at least 1 upper case letter"
+            );
         }
 
         if (!errorMessages.isEmpty()) {
