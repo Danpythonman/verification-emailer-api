@@ -17,11 +17,17 @@ public class SecurityConfig {
 
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthFilter jwtAuthFilter;
+    private final LoggingFilter loggingFilter;
 
     @Autowired
-    public SecurityConfig(AuthenticationProvider authenticationProvider, JwtAuthFilter jwtAuthenticationFilter) {
+    public SecurityConfig(
+        AuthenticationProvider authenticationProvider,
+        JwtAuthFilter jwtAuthenticationFilter,
+        LoggingFilter loggingFilter
+    ) {
         this.authenticationProvider = authenticationProvider;
         this.jwtAuthFilter = jwtAuthenticationFilter;
+        this.loggingFilter = loggingFilter;
     }
 
     @Bean
@@ -38,6 +44,9 @@ public class SecurityConfig {
             .addFilterBefore(
                 this.jwtAuthFilter,
                 UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(
+                this.loggingFilter,
+                JwtAuthFilter.class)
             .build();
     }
 
