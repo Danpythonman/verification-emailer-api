@@ -83,22 +83,22 @@ public class Metrics {
         private String requestMethod;
         private String requestURI;
 
-        public MetricsBuilder setCustomerId(Long customerId) {
+        public MetricsBuilder customerId(Long customerId) {
             this.customerId = customerId;
             return this;
         }
 
-        public MetricsBuilder setRequestDate(Date requestDate) {
+        public MetricsBuilder requestDate(Date requestDate) {
             this.requestDate = requestDate;
             return this;
         }
 
-        public MetricsBuilder setRequestMethod(String requestMethod) {
+        public MetricsBuilder requestMethod(String requestMethod) {
             this.requestMethod = requestMethod;
             return this;
         }
 
-        public MetricsBuilder setRequestURI(String requestURI) {
+        public MetricsBuilder requestURI(String requestURI) {
             this.requestURI = requestURI;
             return this;
         }

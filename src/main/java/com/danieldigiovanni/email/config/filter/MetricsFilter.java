@@ -74,10 +74,10 @@ public class MetricsFilter extends OncePerRequestFilter {
         Long customerId = Long.valueOf(principal.getName());
 
         Metrics metrics = Metrics.builder()
-            .setCustomerId(customerId)
-            .setRequestDate(new Date())
-            .setRequestMethod(request.getMethod())
-            .setRequestURI(request.getRequestURI())
+            .customerId(customerId)
+            .requestDate(new Date())
+            .requestMethod(request.getMethod())
+            .requestURI(request.getRequestURI())
             .build();
 
         this.metricsService.trackMetrics(metrics);
