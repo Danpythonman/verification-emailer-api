@@ -2,6 +2,7 @@ package com.danieldigiovanni.email.config;
 
 import com.danieldigiovanni.email.config.filter.JwtAuthFilter;
 import com.danieldigiovanni.email.config.filter.LoggingFilter;
+import com.danieldigiovanni.email.config.filter.MetricsFilter;
 import com.danieldigiovanni.email.constants.AuthConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,16 +21,19 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthFilter jwtAuthFilter;
     private final LoggingFilter loggingFilter;
+    private final MetricsFilter metricsFilter;
 
     @Autowired
     public SecurityConfig(
         AuthenticationProvider authenticationProvider,
         JwtAuthFilter jwtAuthenticationFilter,
-        LoggingFilter loggingFilter
+        LoggingFilter loggingFilter,
+        MetricsFilter metricsFilter
     ) {
         this.authenticationProvider = authenticationProvider;
         this.jwtAuthFilter = jwtAuthenticationFilter;
         this.loggingFilter = loggingFilter;
+        this.metricsFilter = metricsFilter;
     }
 
     @Bean
@@ -48,6 +52,9 @@ public class SecurityConfig {
                 UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(
                 this.loggingFilter,
+                JwtAuthFilter.class)
+            .addFilterAfter(
+                this.metricsFilter,
                 JwtAuthFilter.class)
             .build();
     }
