@@ -1,9 +1,9 @@
-package com.danieldigiovanni.email.config.filter;
+package com.danieldigiovanni.email.config;
 
 import com.danieldigiovanni.email.auth.CustomerDetails;
 import com.danieldigiovanni.email.auth.CustomerDetailsService;
-import com.danieldigiovanni.email.auth.JwtUtils;
 import com.danieldigiovanni.email.constants.AuthConstants;
+import com.danieldigiovanni.email.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -35,13 +35,11 @@ import java.util.List;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final CustomerDetailsService customerDetailsService;
-    private final JwtUtils jwtUtils;
     private final String TOKEN_SECRET_KEY;
 
     @Autowired
-    public JwtAuthFilter(CustomerDetailsService customerDetailsService, JwtUtils jwtUtils, @Value("${token-secret-key}") String tokenSecretKey) {
+    public JwtAuthFilter(CustomerDetailsService customerDetailsService, @Value("${token-secret-key}") String tokenSecretKey) {
         this.customerDetailsService = customerDetailsService;
-        this.jwtUtils = jwtUtils;
         this.TOKEN_SECRET_KEY = tokenSecretKey;
     }
 
@@ -97,7 +95,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         Claims claims;
         final String jwt = authHeader.substring(7);
         try {
-            claims = this.jwtUtils.extractClaimsFromToken(
+            claims = JwtUtils.extractClaimsFromToken(
                 jwt,
                 this.TOKEN_SECRET_KEY
             );

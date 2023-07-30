@@ -1,4 +1,4 @@
-package com.danieldigiovanni.email.auth;
+package com.danieldigiovanni.email.utils;
 
 import com.danieldigiovanni.email.customer.Customer;
 import io.jsonwebtoken.Claims;
@@ -11,13 +11,16 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
 
-@Component
-public class JwtUtils {
+/**
+ * Utils for interacting with JSON web tokens (JWTs).
+ */
+public final class JwtUtils {
+
+    private JwtUtils() { }
 
     /**
      * Generates a JWT for a given customer. The customer's id will be the
@@ -30,7 +33,7 @@ public class JwtUtils {
      *
      * @return The generated JWT.
      */
-    public String generateToken(Customer customer, Long tokenDurationMillis, String tokenSecretKey) {
+    public static String generateToken(Customer customer, Long tokenDurationMillis, String tokenSecretKey) {
         long issuedAtMillis = System.currentTimeMillis();
         long expiredAtMillis = issuedAtMillis + tokenDurationMillis;
 
@@ -39,7 +42,7 @@ public class JwtUtils {
             .setIssuedAt(new Date(issuedAtMillis))
             .setExpiration(new Date(expiredAtMillis))
             .signWith(
-                this.getSigningKey(tokenSecretKey),
+                JwtUtils.getSigningKey(tokenSecretKey),
                 SignatureAlgorithm.HS256
             )
             .compact();
@@ -62,9 +65,9 @@ public class JwtUtils {
      * @throws ExpiredJwtException      If the JWT is expired.
      * @throws SignatureException       If the JWT signature validation fails.
      */
-    public Claims extractClaimsFromToken(String jwt, String tokenSecretKey) throws IllegalArgumentException, MalformedJwtException, UnsupportedJwtException, ExpiredJwtException, SignatureException {
+    public static Claims extractClaimsFromToken(String jwt, String tokenSecretKey) throws IllegalArgumentException, MalformedJwtException, UnsupportedJwtException, ExpiredJwtException, SignatureException {
         JwtParser jwtParser = Jwts.parserBuilder()
-            .setSigningKey(this.getSigningKey(tokenSecretKey))
+            .setSigningKey(JwtUtils.getSigningKey(tokenSecretKey))
             .build();
 
         return jwtParser.parseClaimsJws(jwt).getBody();
@@ -78,7 +81,7 @@ public class JwtUtils {
      *
      * @return The signing key.
      */
-    private Key getSigningKey(String tokenSecretKey) {
+    private static Key getSigningKey(String tokenSecretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(tokenSecretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }

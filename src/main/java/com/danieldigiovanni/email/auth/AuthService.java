@@ -5,6 +5,8 @@ import com.danieldigiovanni.email.auth.dto.LoginRequest;
 import com.danieldigiovanni.email.auth.dto.RegisterRequest;
 import com.danieldigiovanni.email.customer.Customer;
 import com.danieldigiovanni.email.customer.CustomerRepository;
+import com.danieldigiovanni.email.utils.AuthUtils;
+import com.danieldigiovanni.email.utils.JwtUtils;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
@@ -25,26 +27,14 @@ public class AuthService {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final AuthUtils authUtils;
-    private final JwtUtils jwtUtils;
     private final Long TOKEN_DURATION_MILLIS;
     private final String TOKEN_SECRET_KEY;
 
     @Autowired
-    public AuthService(
-        CustomerRepository customerRepository,
-        PasswordEncoder passwordEncoder,
-        AuthenticationManager authenticationManager,
-        AuthUtils authUtils,
-        JwtUtils jwtUtils,
-        @Value("${token-duration-millis}") Long tokenDurationMillis,
-        @Value("${token-secret-key}") String tokenSecretKey
-    ) {
+    public AuthService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, @Value("${token-duration-millis}") Long tokenDurationMillis, @Value("${token-secret-key}") String tokenSecretKey) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
-        this.authUtils = authUtils;
-        this.jwtUtils = jwtUtils;
         this.TOKEN_DURATION_MILLIS = tokenDurationMillis;
         this.TOKEN_SECRET_KEY = tokenSecretKey;
     }
@@ -65,7 +55,7 @@ public class AuthService {
             throw new ValidationException("Confirm password is required");
         }
         // Throws exception if password does not match constraints
-        this.authUtils.checkPasswordValidity(registerRequest.getPassword());
+        AuthUtils.checkPasswordValidity(registerRequest.getPassword());
 
         String hashedPassword = this.passwordEncoder.encode(
             registerRequest.getPassword()
@@ -93,7 +83,7 @@ public class AuthService {
 
         customer = this.customerRepository.save(customer);
 
-        String jwt = this.jwtUtils.generateToken(
+        String jwt = JwtUtils.generateToken(
             customer,
             this.TOKEN_DURATION_MILLIS,
             this.TOKEN_SECRET_KEY
@@ -121,7 +111,7 @@ public class AuthService {
         customer.setLastLogin(new Date());
         customer = this.customerRepository.save(customer);
 
-        String jwt = this.jwtUtils.generateToken(
+        String jwt = JwtUtils.generateToken(
             customer,
             this.TOKEN_DURATION_MILLIS,
             this.TOKEN_SECRET_KEY
