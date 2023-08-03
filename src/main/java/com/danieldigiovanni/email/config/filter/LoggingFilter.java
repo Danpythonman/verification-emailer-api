@@ -33,7 +33,7 @@ public class LoggingFilter extends OncePerRequestFilter {
      *                          any other reason.
      */
     @Override
-    protected void doFilterInternal(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain) throws ServletException, IOException {
         this.log.info(
             "Handling {} request to {}",
             request.getMethod(),
