@@ -2,13 +2,10 @@ package com.danieldigiovanni.email.customer;
 
 import com.danieldigiovanni.email.customer.dto.UpdateCustomerRequest;
 import com.danieldigiovanni.email.customer.dto.UpdatePasswordRequest;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -47,18 +44,6 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCustomer(Principal principal) {
         this.customerService.deleteCustomer(principal);
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(EntityNotFoundException.class)
-    public String handleNotFoundException(EntityNotFoundException exception) {
-        return exception.getMessage();
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ValidationException.class)
-    public String handleValidationException(ValidationException exception) {
-        return exception.getMessage();
     }
 
 }
