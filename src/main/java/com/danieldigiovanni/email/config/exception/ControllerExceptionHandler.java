@@ -14,13 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -29,83 +27,124 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
+    private final String VALIDATION_ERROR = "Validation Error";
+    private final String AUTHENTICATION_ERROR = "Authentication Error";
+    private final String NOT_FOUND_ERROR = "Not Found Error";
+    private final String ALREADY_EXISTS_ERROR = "Already Exists Error";
+    private final String NOT_YOUR_CODE_ERROR = "Not Your Code";
+    private final String EMAILER_ERROR = "Emailer Error";
+
     private final Logger log =
         LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ValidationException.class)
-    public String handleValidationException(ValidationException exception) {
-        return exception.getMessage();
+    public ErrorResponseBody handleValidationException(ValidationException exception) {
+        return ErrorResponseBody.handledErrorResponse(
+            this.VALIDATION_ERROR,
+            exception.getMessage()
+        );
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationException(MethodArgumentNotValidException exception) {
-        return exception.getFieldErrors()
-            .stream()
-            .collect(Collectors.toMap(
-                FieldError::getField,
-                fieldError -> fieldError.getDefaultMessage() == null
-                    ? "Unknown error"
-                    : fieldError.getDefaultMessage()
-            ));
+    public ErrorResponseBody handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        String errorDetail = exception.getFieldErrors().stream()
+            .map(fieldError -> String.format(
+                "%s %s",
+                fieldError.getField(),
+                fieldError.getDefaultMessage() != null
+                    ? fieldError.getDefaultMessage()
+                    : "unknown validation error"
+            ))
+            .collect(Collectors.joining(", "));
+
+        return ErrorResponseBody.handledErrorResponse(
+            this.VALIDATION_ERROR,
+            errorDetail
+        );
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(AuthenticationException.class)
-    public String handleAuthenticationException(AuthenticationException exception) {
-        return exception.getMessage();
+    public ErrorResponseBody handleAuthenticationException(AuthenticationException exception) {
+        return ErrorResponseBody.handledErrorResponse(
+            this.AUTHENTICATION_ERROR,
+            exception.getMessage()
+        );
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(EntityNotFoundException.class)
-    public String handleNotFoundException(EntityNotFoundException exception) {
-        return exception.getMessage();
+    public ErrorResponseBody handleNotFoundException(EntityNotFoundException exception) {
+        return ErrorResponseBody.handledErrorResponse(
+            this.NOT_FOUND_ERROR,
+            exception.getMessage()
+        );
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(EntityExistsException.class)
-    public String handleAlreadyExistsException(EntityExistsException exception) {
-        return exception.getMessage();
+    public ErrorResponseBody handleAlreadyExistsException(EntityExistsException exception) {
+        return ErrorResponseBody.handledErrorResponse(
+            this.ALREADY_EXISTS_ERROR,
+            exception.getMessage()
+        );
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IncorrectCodeException.class)
     public CodeResponse handleIncorrectCodeException(IncorrectCodeException exception) {
+        // TODO: make this part of normal flow, it's not an error
         return exception.generateResponse();
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(NotYourCodeException.class)
-    public String handleNotYourCodeException(NotYourCodeException exception) {
-        return "You do not have access to the code you tried to verify";
+    public ErrorResponseBody handleNotYourCodeException(NotYourCodeException exception) {
+        return ErrorResponseBody.handledErrorResponse(
+            this.NOT_YOUR_CODE_ERROR,
+            "You do not have access to the code you tried to verify"
+        );
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(ApiCallStatusException.class)
-    public String handleApiCallStatusException(ApiCallStatusException exception) {
+    public ErrorResponseBody handleApiCallStatusException(ApiCallStatusException exception) {
         this.log.error(exception.generateLogMessage());
-        return exception.getMessage();
+        return ErrorResponseBody.handledErrorResponse(
+            this.EMAILER_ERROR,
+            exception.getMessage()
+        );
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(ApiCallResponseBodyException.class)
-    public String handleApiCallResponseBodyException(ApiCallResponseBodyException exception) {
+    public ErrorResponseBody handleApiCallResponseBodyException(ApiCallResponseBodyException exception) {
         this.log.error(exception.generateLogMessage());
-        return exception.getMessage();
+        return ErrorResponseBody.handledErrorResponse(
+            this.EMAILER_ERROR,
+            exception.getMessage()
+        );
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(InvalidUrlException.class)
-    public String handleInvalidUrlException(InvalidUrlException exception) {
-        return exception.getMessage();
+    public ErrorResponseBody handleInvalidUrlException(InvalidUrlException exception) {
+        return ErrorResponseBody.handledErrorResponse(
+            this.EMAILER_ERROR,
+            exception.getMessage()
+        );
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(MailtrapEmailerException.class)
-    public String handleMailtrapEmailerException(MailtrapEmailerException exception) {
+    public ErrorResponseBody handleMailtrapEmailerException(MailtrapEmailerException exception) {
         this.log.error(exception.getMessage(), exception);
-        return exception.getMessage();
+        return ErrorResponseBody.handledErrorResponse(
+            this.EMAILER_ERROR,
+            exception.getMessage()
+        );
     }
 
 }
