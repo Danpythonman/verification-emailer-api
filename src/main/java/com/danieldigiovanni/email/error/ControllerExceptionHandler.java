@@ -1,7 +1,5 @@
 package com.danieldigiovanni.email.error;
 
-import com.danieldigiovanni.email.code.dto.CodeResponse;
-import com.danieldigiovanni.email.code.exception.IncorrectCodeException;
 import com.danieldigiovanni.email.code.exception.NotYourCodeException;
 import com.danieldigiovanni.email.emailer.exception.ApiCallResponseBodyException;
 import com.danieldigiovanni.email.emailer.exception.ApiCallStatusException;
@@ -90,13 +88,6 @@ public class ControllerExceptionHandler {
             this.ALREADY_EXISTS_ERROR,
             exception.getMessage()
         );
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IncorrectCodeException.class)
-    public CodeResponse handleIncorrectCodeException(IncorrectCodeException exception) {
-        // TODO: make this part of normal flow, it's not an error
-        return exception.generateResponse();
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
