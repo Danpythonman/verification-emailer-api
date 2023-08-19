@@ -1,4 +1,4 @@
-package com.danieldigiovanni.email.config.exception;
+package com.danieldigiovanni.email.error;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.danieldigiovanni.email.config.filter;
+package com.danieldigiovanni.email.filter;
 
 import com.danieldigiovanni.email.metrics.Metrics;
 import com.danieldigiovanni.email.metrics.MetricsService;

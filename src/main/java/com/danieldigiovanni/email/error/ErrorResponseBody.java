@@ -1,4 +1,4 @@
-package com.danieldigiovanni.email.config.exception;
+package com.danieldigiovanni.email.error;
 
 /**
  * The response body format for all errors.
