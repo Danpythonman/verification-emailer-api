@@ -3,7 +3,6 @@ package com.danieldigiovanni.email.code;
 import com.danieldigiovanni.email.code.dto.CodeResponse;
 import com.danieldigiovanni.email.code.dto.SendCodeRequest;
 import com.danieldigiovanni.email.code.dto.VerifyCodeRequest;
-import com.danieldigiovanni.email.code.exception.IncorrectCodeException;
 import com.danieldigiovanni.email.code.exception.NotYourCodeException;
 import com.danieldigiovanni.email.customer.Customer;
 import com.danieldigiovanni.email.customer.CustomerService;
@@ -11,6 +10,7 @@ import com.danieldigiovanni.email.emailer.Emailer;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -77,7 +77,7 @@ public class CodeService {
         return new CodeResponse(code);
     }
 
-    public CodeResponse verifyCode(Principal principal, VerifyCodeRequest verifyCodeRequest) {
+    public ResponseEntity<CodeResponse> verifyCode(Principal principal, VerifyCodeRequest verifyCodeRequest) {
         Customer customer =
             this.customerService.getCustomerByPrincipal(principal);
 
@@ -100,16 +100,16 @@ public class CodeService {
             verifyCodeRequest.getCode(),
             code.getHash()
         );
-        if (!codeMatches) {
+
+        if (codeMatches) {
+            code.setFulfilledAt(new Date());
+            this.codeRepository.save(code);
+            return ResponseEntity.noContent().build();
+        } else {
             code.incrementIncorrectAttempts();
             code = this.codeRepository.save(code);
-            throw new IncorrectCodeException(code);
+            return ResponseEntity.badRequest().body(new CodeResponse(code));
         }
-
-        code.setFulfilledAt(new Date());
-        code = this.codeRepository.save(code);
-
-        return new CodeResponse(code);
     }
 
 }

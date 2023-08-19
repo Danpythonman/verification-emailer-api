@@ -23,7 +23,7 @@ public class NoOpEmailer implements Emailer {
      */
     @Override
     public void sendEmail(String toAddress, String subject, String code, Integer duration) {
-        log.info(
+        this.log.info(
             "NoOpEmailer.sendEmail called. Here are the arguments: {" +
                 "toAddress: " + toAddress + ", " +
                 "subject: " + subject + ", " +

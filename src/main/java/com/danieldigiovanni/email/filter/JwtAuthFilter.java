@@ -1,4 +1,4 @@
-package com.danieldigiovanni.email.config.filter;
+package com.danieldigiovanni.email.filter;
 
 import com.danieldigiovanni.email.auth.CustomerDetails;
 import com.danieldigiovanni.email.auth.CustomerDetailsService;

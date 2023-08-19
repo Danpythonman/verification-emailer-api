@@ -1,6 +1,6 @@
 package com.danieldigiovanni.email;
 
-import com.danieldigiovanni.email.config.filter.JwtAuthFilter;
+import com.danieldigiovanni.email.filter.JwtAuthFilter;
 import jakarta.annotation.Nonnull;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.MockMvc;
