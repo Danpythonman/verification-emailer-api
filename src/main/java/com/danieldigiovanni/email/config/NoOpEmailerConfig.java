@@ -1,5 +1,6 @@
 package com.danieldigiovanni.email.config;
 
+import com.danieldigiovanni.email.emailer.Emailer;
 import com.danieldigiovanni.email.emailer.NoOpEmailer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,7 @@ public class NoOpEmailerConfig {
         LoggerFactory.getLogger(NoOpEmailerConfig.class);
 
     @Bean
-    public NoOpEmailer noOpEmailer() {
+    public Emailer noOpEmailer() {
         this.log.info("Initializing No-op Emailer");
         return new NoOpEmailer();
     }

@@ -1,5 +1,6 @@
 package com.danieldigiovanni.email.config;
 
+import com.danieldigiovanni.email.emailer.Emailer;
 import com.danieldigiovanni.email.emailer.MailtrapEmailer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ public class MailtrapEmailerConfig {
     }
 
     @Bean
-    public MailtrapEmailer mailtrapEmailer() {
+    public Emailer mailtrapEmailer() {
         this.log.info("Initializing Mailtrap Emailer");
         return new MailtrapEmailer(
             this.fromAddress,
