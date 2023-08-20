@@ -1,21 +1,19 @@
 package com.danieldigiovanni.email.config;
 
+import com.danieldigiovanni.email.emailer.Emailer;
 import com.danieldigiovanni.email.emailer.MailtrapEmailer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;
 
 @Configuration
-@ConditionalOnProperty(
-    value = "emailer-method",
-    havingValue = "mailtrap"
-)
+@Profile("mailtrap")
 public class MailtrapEmailerConfig {
 
     private final String fromAddress;
@@ -36,7 +34,7 @@ public class MailtrapEmailerConfig {
     }
 
     @Bean
-    public MailtrapEmailer mailtrapEmailer() {
+    public Emailer mailtrapEmailer() {
         this.log.info("Initializing Mailtrap Emailer");
         return new MailtrapEmailer(
             this.fromAddress,
