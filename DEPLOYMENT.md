@@ -34,6 +34,12 @@ java -jar path/to/email-1.5.0.jar --spring.profiles.active=prod,api
 To learn more about the active profiles used, see the
 [active profiles section](./README.md#active-profiles) in the README.md file.
 
+Additionally, we can specify the port number when running the JAR file:
+
+```
+java -jar email-$version.jar --spring.profiles.active=prod,api --server.port=8080
+```
+
 Use of Systemd
 --------------
 
@@ -55,7 +61,7 @@ version="1.5.0"
 
 cd "/path/to/"
 
-java -jar email-$version.jar --spring.profiles.active=prod,api
+java -jar email-$version.jar --spring.profiles.active=prod,api --server.port=8080
 
 echo "VEA stopped"
 ```
