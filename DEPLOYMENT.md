@@ -55,7 +55,7 @@ version="1.5.0"
 
 cd "/path/to/"
 
-java -jar email-$version.jar --spring.profiles.active=prod
+java -jar email-$version.jar --spring.profiles.active=prod,api
 
 echo "VEA stopped"
 ```
