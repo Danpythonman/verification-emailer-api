@@ -66,6 +66,12 @@ java -jar email-$version.jar --spring.profiles.active=prod,api --server.port=808
 echo "VEA stopped"
 ```
 
+You must also make this file executable by running:
+
+```bash
+sudo chmod +x /usr/sbin/vea
+```
+
 ### Creating a Service File
 
 Next, we need to create a service file for systemd that will call the above
