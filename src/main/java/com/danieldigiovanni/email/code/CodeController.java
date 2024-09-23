@@ -2,6 +2,7 @@ package com.danieldigiovanni.email.code;
 
 import com.danieldigiovanni.email.code.dto.CodeResponse;
 import com.danieldigiovanni.email.code.dto.SendCodeRequest;
+import com.danieldigiovanni.email.code.dto.SendCustomCodeRequest;
 import com.danieldigiovanni.email.code.dto.VerifyCodeRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,11 @@ public class CodeController {
     @PostMapping("/code/verify")
     public ResponseEntity<CodeResponse> verifyCode(Principal principal, @RequestBody @Valid VerifyCodeRequest verifyCodeRequest) {
         return this.codeService.verifyCode(principal, verifyCodeRequest);
+    }
+
+    @PostMapping("/custom/code/send")
+    public CodeResponse sendCustomCode(Principal principal, @RequestBody @Valid SendCustomCodeRequest sendCustomCodeRequest) {
+        return this.codeService.sendCustomCode(principal, sendCustomCodeRequest);
     }
 
 }

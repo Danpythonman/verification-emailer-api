@@ -6,6 +6,7 @@ import com.danieldigiovanni.email.auth.dto.AuthResponse;
 import com.danieldigiovanni.email.auth.dto.RegisterRequest;
 import com.danieldigiovanni.email.code.dto.SendCodeRequest;
 import com.danieldigiovanni.email.code.dto.CodeResponse;
+import com.danieldigiovanni.email.code.dto.SendCustomCodeRequest;
 import com.danieldigiovanni.email.code.dto.VerifyCodeRequest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -343,6 +344,169 @@ public class CodeIntegrationTest {
                     .content(TestUtils.generateJson(verifyCodeRequest))
             )
             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void testGenerateAndVerifyCustomCode_HappyPath_OneAttempt() throws Exception {
+        SendCustomCodeRequest sendCustomCodeRequest = new SendCustomCodeRequest();
+        sendCustomCodeRequest.setEmail("test6@email.com");
+        sendCustomCodeRequest.setCode("123");
+        sendCustomCodeRequest.setMaximumAttempts(5);
+        sendCustomCodeRequest.setMaximumDurationInMinutes(10);
+
+        String path = "/custom/code/send";
+
+        MvcResult response = this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .header("Authorization", "Bearer " + this.token)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtils.generateJson(sendCustomCodeRequest))
+            )
+            .andExpect(status().isOk())
+            .andReturn();
+
+        CodeResponse codeResponse = TestUtils.parseJson(
+            response.getResponse().getContentAsString(),
+            CodeResponse.class
+        );
+
+        assertEquals(5, codeResponse.getMaximumAttempts());
+        assertEquals(5, codeResponse.getRemainingAttempts());
+        assertEquals(
+            10,
+            TimeUnit.MILLISECONDS.toMinutes(
+                codeResponse.getExpiresAt().getTime()
+                    - codeResponse.getCreatedAt().getTime()
+            )
+        );
+
+        VerifyCodeRequest verifyCodeRequest = new VerifyCodeRequest();
+        verifyCodeRequest.setEmail("test6@email.com");
+        verifyCodeRequest.setCode("123");
+
+        path = "/code/verify";
+        this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .header("Authorization", "Bearer " + this.token)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtils.generateJson(verifyCodeRequest))
+            )
+            .andExpect(status().isNoContent());
+    }
+
+
+    @Test
+    public void testGenerateCustomCode_CodeAlreadyExists() throws Exception {
+        SendCustomCodeRequest sendCustomCodeRequest = new SendCustomCodeRequest();
+        sendCustomCodeRequest.setEmail("test7@email.com");
+        sendCustomCodeRequest.setCode("123");
+        sendCustomCodeRequest.setMaximumAttempts(5);
+        sendCustomCodeRequest.setMaximumDurationInMinutes(10);
+
+        String path = "/custom/code/send";
+
+        this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .header("Authorization", "Bearer " + this.token)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtils.generateJson(sendCustomCodeRequest))
+            )
+            .andExpect(status().isOk());
+
+        this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .header("Authorization", "Bearer " + this.token)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtils.generateJson(sendCustomCodeRequest))
+            )
+            .andExpect(status().isConflict())
+            .andReturn();
+    }
+
+    @Test
+    public void testGenerateAndVerifyCustomCode_TooManyAttempts() throws Exception {
+        SendCustomCodeRequest sendCustomCodeRequest = new SendCustomCodeRequest();
+        sendCustomCodeRequest.setEmail("test8@email.com");
+        sendCustomCodeRequest.setCode("123");
+        sendCustomCodeRequest.setMaximumAttempts(5);
+        sendCustomCodeRequest.setMaximumDurationInMinutes(10);
+
+        String path = "/custom/code/send";
+
+        MvcResult response = this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .header("Authorization", "Bearer " + this.token)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtils.generateJson(sendCustomCodeRequest))
+            )
+            .andExpect(status().isOk())
+            .andReturn();
+
+        CodeResponse codeResponse = TestUtils.parseJson(
+            response.getResponse().getContentAsString(),
+            CodeResponse.class
+        );
+
+        assertEquals(5, codeResponse.getMaximumAttempts());
+        assertEquals(5, codeResponse.getRemainingAttempts());
+        assertEquals(
+            10,
+            TimeUnit.MILLISECONDS.toMinutes(
+                codeResponse.getExpiresAt().getTime()
+                    - codeResponse.getCreatedAt().getTime()
+            )
+        );
+
+        VerifyCodeRequest verifyCodeRequest = new VerifyCodeRequest();
+        verifyCodeRequest.setEmail("test8@email.com");
+        verifyCodeRequest.setCode("54321");
+
+        path = "/code/verify";
+        for (int i = 0 ; i < 5; i++) {
+            this.mockMvc.perform(
+                    post(path)
+                        .with(new AddServletPathRequestPostProcessor(path))
+                        .header("Authorization", "Bearer " + this.token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtils.generateJson(verifyCodeRequest))
+                )
+                .andExpect(status().isBadRequest());
+        }
+
+        this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .header("Authorization", "Bearer " + this.token)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtils.generateJson(verifyCodeRequest))
+            )
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testGenerateCustomCode_CodeTooShort() throws Exception {
+        SendCustomCodeRequest sendCustomCodeRequest = new SendCustomCodeRequest();
+        sendCustomCodeRequest.setEmail("test9@email.com");
+        sendCustomCodeRequest.setCode("1");
+        sendCustomCodeRequest.setMaximumAttempts(5);
+        sendCustomCodeRequest.setMaximumDurationInMinutes(10);
+
+        String path = "/custom/code/send";
+
+        this.mockMvc.perform(
+                post(path)
+                    .with(new AddServletPathRequestPostProcessor(path))
+                    .header("Authorization", "Bearer " + this.token)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtils.generateJson(sendCustomCodeRequest))
+            )
+            .andExpect(status().isBadRequest())
+            .andReturn();
     }
 
 }

@@ -2,6 +2,7 @@ package com.danieldigiovanni.email.code;
 
 import com.danieldigiovanni.email.code.dto.CodeResponse;
 import com.danieldigiovanni.email.code.dto.SendCodeRequest;
+import com.danieldigiovanni.email.code.dto.SendCustomCodeRequest;
 import com.danieldigiovanni.email.code.dto.VerifyCodeRequest;
 import com.danieldigiovanni.email.code.exception.NotYourCodeException;
 import com.danieldigiovanni.email.customer.Customer;
@@ -34,47 +35,17 @@ public class CodeService {
     }
 
     public CodeResponse sendCode(Principal principal, SendCodeRequest sendCodeRequest) {
-        Customer customer =
-            this.customerService.getCustomerByPrincipal(principal);
-
-        List<Code> codes = this.codeRepository.getCodesByEmail(
-            sendCodeRequest.getEmail()
-        );
-
-        boolean emailHasActiveCode = codes.stream().anyMatch(Code::isActive);
-        if (emailHasActiveCode) {
-            throw new EntityExistsException(
-                "Email " + sendCodeRequest.getEmail() + " already has an "
-                    + "active code."
-            );
-        }
-
         String randomCode = this.codeUtils.generateRandomCode(
             sendCodeRequest.getLength()
         );
 
-        String hash = this.codeUtils.generateHash(randomCode);
-
-        Code code = Code.builder()
-            .customer(customer)
-            .email(sendCodeRequest.getEmail())
-            .hash(hash)
-            .createdAt(new Date())
-            .maximumAttempts(sendCodeRequest.getMaximumAttempts())
-            .maximumDurationInMinutes(
-                sendCodeRequest.getMaximumDurationInMinutes())
-            .build();
-
-        code = this.codeRepository.save(code);
-
-        this.emailer.sendEmail(
-            code.getEmail(),
-            "Verification Code",
+        return this.sendCodeHelper(
+            principal,
+            sendCodeRequest.getEmail(),
             randomCode,
-            code.getMaximumDurationInMinutes()
+            sendCodeRequest.getMaximumAttempts(),
+            sendCodeRequest.getMaximumDurationInMinutes()
         );
-
-        return new CodeResponse(code);
     }
 
     public ResponseEntity<CodeResponse> verifyCode(Principal principal, VerifyCodeRequest verifyCodeRequest) {
@@ -110,6 +81,52 @@ public class CodeService {
             code = this.codeRepository.save(code);
             return ResponseEntity.badRequest().body(new CodeResponse(code));
         }
+    }
+
+    public CodeResponse sendCustomCode(Principal principal, SendCustomCodeRequest sendCustomCodeRequest) {
+        return this.sendCodeHelper(
+            principal,
+            sendCustomCodeRequest.getEmail(),
+            sendCustomCodeRequest.getCode(),
+            sendCustomCodeRequest.getMaximumAttempts(),
+            sendCustomCodeRequest.getMaximumDurationInMinutes()
+        );
+    }
+
+    private CodeResponse sendCodeHelper(Principal principal, String email, String codeString, int maximumAttempts, int maximumDurationInMinutes) {
+        Customer customer =
+            this.customerService.getCustomerByPrincipal(principal);
+
+        List<Code> codes = this.codeRepository.getCodesByEmail(email);
+
+        boolean emailHasActiveCode = codes.stream().anyMatch(Code::isActive);
+        if (emailHasActiveCode) {
+            throw new EntityExistsException(
+                "Email " + email + " already has an active code."
+            );
+        }
+
+        String hash = this.codeUtils.generateHash(codeString);
+
+        Code code = Code.builder()
+            .customer(customer)
+            .email(email)
+            .hash(hash)
+            .createdAt(new Date())
+            .maximumAttempts(maximumAttempts)
+            .maximumDurationInMinutes(maximumDurationInMinutes)
+            .build();
+
+        code = this.codeRepository.save(code);
+
+        this.emailer.sendEmail(
+            code.getEmail(),
+            "Verification Code",
+            codeString,
+            code.getMaximumDurationInMinutes()
+        );
+
+        return new CodeResponse(code);
     }
 
 }
